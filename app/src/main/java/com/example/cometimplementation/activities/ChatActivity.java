@@ -1,20 +1,16 @@
 package com.example.cometimplementation.activities;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.ImageDecoder;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -26,12 +22,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cometchat.pro.constants.CometChatConstants;
+import com.cometchat.pro.core.Call;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.BaseMessage;
 import com.cometchat.pro.models.CustomMessage;
 import com.cometchat.pro.models.MediaMessage;
 import com.cometchat.pro.models.TextMessage;
+import com.cometchat.pro.models.User;
+import com.example.cometimplementation.ApiCalls;
+import com.example.cometimplementation.Interfaces.CallStatus;
+import com.example.cometimplementation.Interfaces.Listeners;
 import com.example.cometimplementation.R;
 import com.example.cometimplementation.adapter.ChatAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,17 +47,14 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
+public class ChatActivity extends AppCompatActivity implements View.OnClickListener, Listeners , CallStatus {
 
+    private static final String TAG = "check_call";
     private String receiverUid = "", receiverImg = "", receiverName = "";
     private CircleImageView profile_img;
     private TextView name;
@@ -69,6 +67,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private String listenerID = "ChatActivity.java";
     private Uri resultUri;
 
+    private String listenerId = "123456";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +133,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initiateCall() {
 
-        startActivity(new Intent(this, CallingActivity.class));
+        Intent intent = new Intent(this, CallingActivity.class);
+        intent.putExtra("receiverUid", receiverUid);
+        intent.putExtra("session_id","");
+        startActivity(intent);
+
 
     }
 
@@ -274,6 +277,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        ApiCalls.callInformation(this,this);
 
     }
 
@@ -281,6 +285,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPause() {
         super.onPause();
         CometChat.removeMessageListener(listenerID);
+        CometChat.removeMessageListener(listenerId);
+
 
     }
 
@@ -302,4 +308,71 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         return cursor.getString(column_index);
     }
 
+    @Override
+    public void addedNewUser(User user) {
+
+    }
+
+    @Override
+    public void receiveCall(Call call) {
+
+        ShowCallingAlertDialog(call);
+
+
+    }
+
+    @Override
+    public void acceptedOutGoingCall(Call call) {
+
+    }
+
+    @Override
+    public void rejectedOutGoingCall(Call call) {
+
+    }
+
+    @Override
+    public void canceledOutGoingCall(Call call) {
+
+    }
+
+    private void ShowCallingAlertDialog(Call call) {
+
+        Dialog dialog=new Dialog(this);
+        View view=getLayoutInflater().inflate(R.layout.calling_request_alert_layout,null,false);
+        dialog.setContentView(view);
+        dialog.setCancelable(false);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        CircleImageView circleImageView=dialog.findViewById(R.id.image_view);
+
+        FloatingActionButton reject=dialog.findViewById(R.id.reject);
+        FloatingActionButton accept=dialog.findViewById(R.id.accept);
+        Picasso.get().load(call.getSender().getAvatar()).into(circleImageView);
+        accept.setOnClickListener(v -> {
+           ApiCalls.acceptCall(this,this,call);
+           dialog.dismiss();
+        });
+
+        reject.setOnClickListener(v->{
+            ApiCalls.rejectCall(this,this,call);
+            dialog.dismiss();
+
+        });
+        dialog.show();
+
+    }
+
+    @Override
+    public void reject(Call call) {
+        Toast.makeText(ChatActivity.this,call.getSender().toString()+ " call has been rejected",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void accept(Call call) {
+        Intent intent = new Intent(this, CallingActivity.class);
+        intent.putExtra("receiverUid", "");
+        intent.putExtra("session_id",call.getSessionId());
+        startActivity(intent);
+
+    }
 }

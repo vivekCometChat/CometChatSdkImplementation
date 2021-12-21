@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cometchat.pro.models.User;
 import com.example.cometimplementation.ApiCalls;
 import com.example.cometimplementation.AppConfig;
-import com.example.cometimplementation.Listeners;
+import com.example.cometimplementation.Interfaces.Listeners;
 import com.example.cometimplementation.R;
 import com.example.cometimplementation.models.UserPojo;
 

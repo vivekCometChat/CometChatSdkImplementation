@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -23,18 +25,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cometchat.pro.core.AppSettings;
+import com.cometchat.pro.core.Call;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.core.UsersRequest;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.User;
+import com.example.cometimplementation.ApiCalls;
 import com.example.cometimplementation.AppConfig;
-import com.example.cometimplementation.Listeners;
+import com.example.cometimplementation.Interfaces.CallStatus;
+import com.example.cometimplementation.Interfaces.Listeners;
 import com.example.cometimplementation.R;
 import com.example.cometimplementation.models.UserPojo;
 import com.example.cometimplementation.adapter.ContactRecycler;
 import com.example.cometimplementation.adapter.RecyclerAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.picasso.Picasso;
 
-public class MainActivity extends AppCompatActivity implements Listeners {
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class MainActivity extends AppCompatActivity implements Listeners, CallStatus {
 
     List<UserPojo> userPojos = new ArrayList<>();
     private UsersRequest usersRequest = null;
@@ -44,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements Listeners {
     List<UserPojo> recycler = new ArrayList<>();
     RecyclerAdapter recyclerAdapter;
     ContactRecycler contactRecycler;
+    Intent intent;
+    private String listenerId = "123456";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements Listeners {
         setRecyclerView();
         setContactRecycler();
         checkPermissions();
-//        initCometChat();
 
     }
 
@@ -83,12 +93,11 @@ public class MainActivity extends AppCompatActivity implements Listeners {
         });
 
 
-
     }
 
     private void setContactRecycler() {
         contact_recycler.setLayoutManager(new LinearLayoutManager(this));
-        contactRecycler = new ContactRecycler(this,this, userPojos);
+        contactRecycler = new ContactRecycler(this, this, userPojos);
         contact_recycler.setAdapter(contactRecycler);
 
     }
@@ -180,6 +189,40 @@ public class MainActivity extends AppCompatActivity implements Listeners {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ApiCalls.callInformation(this, this);
+
+    }
+
+    private void ShowCallingAlertDialog(Call call) {
+
+        Dialog dialog = new Dialog(this);
+        View view = getLayoutInflater().inflate(R.layout.calling_request_alert_layout, null, false);
+        dialog.setContentView(view);
+        dialog.setCancelable(false);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        CircleImageView circleImageView = dialog.findViewById(R.id.image_view);
+
+        FloatingActionButton reject = dialog.findViewById(R.id.reject);
+        FloatingActionButton accept = dialog.findViewById(R.id.accept);
+        Picasso.get().load(call.getSender().getAvatar()).into(circleImageView);
+        accept.setOnClickListener(v -> {
+            ApiCalls.acceptCall(this, this, call);
+            dialog.dismiss();
+        });
+
+        reject.setOnClickListener(v -> {
+            ApiCalls.rejectCall(this, this, call);
+            dialog.dismiss();
+
+        });
+        dialog.show();
+
+    }
+
     private void getContactList() {
 
         Uri uri = ContactsContract.Contacts.CONTENT_URI;
@@ -218,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements Listeners {
             Log.d("see_contacts", "total count" + userPojos.size());
             contactRecycler.notifyDataSetChanged();
 
-        initCometChat();
+            initCometChat();
         }
 
     }
@@ -242,5 +285,46 @@ public class MainActivity extends AppCompatActivity implements Listeners {
     @Override
     public void addedNewUser(User user) {
         fetchUsers();
+    }
+
+    @Override
+    public void receiveCall(Call call) {
+        ShowCallingAlertDialog(call);
+
+    }
+
+    @Override
+    public void acceptedOutGoingCall(Call call) {
+
+    }
+
+    @Override
+    public void rejectedOutGoingCall(Call call) {
+
+    }
+
+    @Override
+    public void canceledOutGoingCall(Call call) {
+
+    }
+
+    @Override
+    public void reject(Call call) {
+
+    }
+
+    @Override
+    public void accept(Call call) {
+        Intent intent = new Intent(this, CallingActivity.class);
+        intent.putExtra("receiverUid", "");
+        intent.putExtra("session_id",call.getSessionId());
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        CometChat.removeMessageListener(listenerId);
+
     }
 }
