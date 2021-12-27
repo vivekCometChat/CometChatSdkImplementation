@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,10 +23,11 @@ public class ContactRecycler extends RecyclerView.Adapter<ContactRecycler.myView
     Context context;
     List<UserPojo> list;
     Listeners listeners;
-    public ContactRecycler(Listeners listeners,Context context, List<UserPojo> list) {
+
+    public ContactRecycler(Listeners listeners, Context context, List<UserPojo> list) {
         this.context = context;
         this.list = list;
-        this.listeners=listeners;
+        this.listeners = listeners;
     }
 
     @NonNull
@@ -40,14 +42,13 @@ public class ContactRecycler extends RecyclerView.Adapter<ContactRecycler.myView
 
         holder.name.setText(list.get(position).getName());
         holder.number.setText(list.get(position).getNumber());
-        holder.itemView.setOnClickListener(v -> {
+        holder.add.setOnClickListener(v -> {
 
-            User user=new User();
+            User user = new User();
             user.setUid(list.get(position).getNumber());
             user.setName(list.get(position).getName());
             user.setAvatar(AppConfig.AVATAR);
-
-            ApiCalls.createUser(user,context,listeners);
+            ApiCalls.createUser(user, context, listeners);
 
         });
     }
@@ -59,13 +60,13 @@ public class ContactRecycler extends RecyclerView.Adapter<ContactRecycler.myView
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         TextView name, number;
+        ImageView add;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name);
             number = itemView.findViewById(R.id.number);
-
-
+            add = itemView.findViewById(R.id.add);
         }
     }
 }

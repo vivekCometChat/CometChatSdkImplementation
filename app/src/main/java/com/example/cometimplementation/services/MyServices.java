@@ -24,8 +24,8 @@ public class MyServices extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-//        createNotificationChannel();
-        isGettingCall();
+        createNotificationChannel();
+//        isGettingCall();
         Intent intent1 = new Intent(this, CallingActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent1, 0);
 

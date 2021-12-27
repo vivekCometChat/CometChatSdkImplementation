@@ -2,27 +2,22 @@ package com.example.cometimplementation.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.cometchat.pro.models.BaseMessage;
 import com.cometchat.pro.models.MediaMessage;
 import com.cometchat.pro.models.TextMessage;
-import com.example.cometimplementation.AppConfig;
 import com.example.cometimplementation.R;
+import com.example.cometimplementation.SharedPrefData;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 
@@ -33,6 +28,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.myViewHolder> 
     public ChatAdapter(Context context, List<BaseMessage> chatMessageModels) {
         this.context = context;
         this.chatMessageModels = chatMessageModels;
+
     }
 
     @NonNull
@@ -47,7 +43,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.myViewHolder> 
     @SuppressLint("RtlHardcoded")
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
-        if (!chatMessageModels.get(position).getReceiverUid().equals(AppConfig.UID)) {
+        if (!chatMessageModels.get(position).getReceiverUid().equals(SharedPrefData.getUserId(context))) {
             holder.message_container.setGravity(Gravity.END);
             holder.message.setBackground(ContextCompat.getDrawable(context, R.drawable.sender_background));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -73,6 +69,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.myViewHolder> 
         } else if (chatMessageModels.get(position) instanceof MediaMessage) {
             MediaMessage textMessage = (MediaMessage) chatMessageModels.get(position);
             holder.message.setText(textMessage.getAttachment().getFileUrl());
+            holder.message.setVisibility(View.GONE);
             holder.image.setVisibility(View.VISIBLE);
             Picasso.get().load(textMessage.getAttachment().getFileUrl()).into(holder.image);
         }

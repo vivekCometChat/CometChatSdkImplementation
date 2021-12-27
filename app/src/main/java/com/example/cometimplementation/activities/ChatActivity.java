@@ -12,7 +12,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -29,6 +32,7 @@ import com.cometchat.pro.models.BaseMessage;
 import com.cometchat.pro.models.CustomMessage;
 import com.cometchat.pro.models.MediaMessage;
 import com.cometchat.pro.models.TextMessage;
+import com.cometchat.pro.models.TypingIndicator;
 import com.cometchat.pro.models.User;
 import com.example.cometimplementation.ApiCalls;
 import com.example.cometimplementation.Interfaces.CallStatus;
@@ -37,10 +41,12 @@ import com.example.cometimplementation.R;
 import com.example.cometimplementation.adapter.ChatAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -52,12 +58,12 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatActivity extends AppCompatActivity implements View.OnClickListener, Listeners , CallStatus {
+public class ChatActivity extends AppCompatActivity implements View.OnClickListener, Listeners{
 
     private static final String TAG = "check_call";
     private String receiverUid = "", receiverImg = "", receiverName = "";
     private CircleImageView profile_img;
-    private TextView name;
+    private TextView name,indicator;
     private EditText input_message;
     private ImageView gallery, image, call;
     private FloatingActionButton send;
@@ -66,9 +72,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private List<BaseMessage> messages = new ArrayList<>();
     private String listenerID = "ChatActivity.java";
     private Uri resultUri;
-
+    private TypingIndicator typingIndicator;
     private String listenerId = "123456";
 
+    long delay = 2000;
+    long last_text_edit = 0;
+    Handler handler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +93,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         receiverName = getIntent().getStringExtra("name");
 
         profile_img = findViewById(R.id.profile_img);
+        indicator = findViewById(R.id.indicator);
         name = findViewById(R.id.name);
         call = findViewById(R.id.call);
         input_message = findViewById(R.id.input_message);
@@ -91,7 +101,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         send = findViewById(R.id.send);
         recycler_chat = findViewById(R.id.recycler_chat);
         image = findViewById(R.id.image);
-
+        typingIndicator = new TypingIndicator(receiverUid, CometChatConstants.RECEIVER_TYPE_USER);
         send.setOnClickListener(this);
         gallery.setOnClickListener(this);
         call.setOnClickListener(this);
@@ -99,7 +109,38 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         Picasso.get().load(receiverImg).into(profile_img);
         setChatRecyclerView();
 
+        input_message.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                CometChat.startTyping(typingIndicator);
+                handler.removeCallbacks(input_finish_checker);
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.length() > 0) {
+                    last_text_edit = System.currentTimeMillis();
+                }
+                handler.postDelayed(input_finish_checker, delay);
+            }
+        });
+
     }
+
+    private Runnable input_finish_checker = new Runnable() {
+        public void run() {
+            if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
+                // TODO: do what you need here
+                // ............
+                // ............
+                CometChat.endTyping(typingIndicator);
+
+            }
+        }
+    };
 
     private void setChatRecyclerView() {
 
@@ -133,10 +174,24 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initiateCall() {
 
-        Intent intent = new Intent(this, CallingActivity.class);
-        intent.putExtra("receiverUid", receiverUid);
-        intent.putExtra("session_id","");
-        startActivity(intent);
+        Dexter.withActivity(this).withPermissions(Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO).withListener(new MultiplePermissionsListener() {
+            @Override
+            public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                Intent intent = new Intent(ChatActivity.this, CallingActivity.class);
+                intent.putExtra("receiverUid", receiverUid);
+                intent.putExtra("session_id", "");
+                intent.putExtra("user_img", receiverImg);
+                intent.putExtra("receiver_name", receiverName);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+
+            }
+        }).check();
+
+
 
 
     }
@@ -220,6 +275,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 image.setVisibility(View.GONE);
                 messages.add(mediaMessage);
                 chatAdapter.notifyDataSetChanged();
+                recycler_chat.smoothScrollToPosition(messages.size()-1);
+
             }
 
             @Override
@@ -235,11 +292,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         CometChat.sendMessage(textMessage, new CometChat.CallbackListener<TextMessage>() {
             @Override
             public void onSuccess(TextMessage textMessage) {
+                CometChat.endTyping(typingIndicator);
                 Log.d("check", "Message sent successfully: " + textMessage.toString());
                 input_message.getText().clear();
                 hideKeyBoard();
                 messages.add(textMessage);
                 chatAdapter.notifyDataSetChanged();
+                recycler_chat.smoothScrollToPosition(messages.size()-1);
+
             }
 
             @Override
@@ -262,12 +322,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("check", "Text message received successfully: " + textMessage.toString());
                 messages.add(textMessage);
                 chatAdapter.notifyDataSetChanged();
+                recycler_chat.smoothScrollToPosition(messages.size()-1);
             }
 
             @Override
             public void onMediaMessageReceived(MediaMessage mediaMessage) {
                 messages.add(mediaMessage);
                 chatAdapter.notifyDataSetChanged();
+                recycler_chat.smoothScrollToPosition(messages.size()-1);
+
                 Log.d("check", "Media message received successfully: " + mediaMessage.toString());
             }
 
@@ -276,10 +339,24 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("check", "Custom message received successfully: " + customMessage.toString());
             }
         });
+//        ApiCalls.callInformation(this, this);
 
-        ApiCalls.callInformation(this,this);
+        CometChat.addMessageListener("Listener 1", new CometChat.MessageListener() {
+            @Override
+            public void onTypingStarted(TypingIndicator typingIndicator) {
+                Log.d(TAG, " Typing Started : " + typingIndicator.toString());
+                indicator.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onTypingEnded(TypingIndicator typingIndicator) {
+                Log.d(TAG, " Typing Ended : " + typingIndicator.toString());
+                indicator.setVisibility(View.GONE);
+            }
+
+        });
 
     }
+
 
     @Override
     protected void onPause() {
@@ -316,7 +393,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void receiveCall(Call call) {
 
-        ShowCallingAlertDialog(call);
 
 
     }
@@ -336,43 +412,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void ShowCallingAlertDialog(Call call) {
 
-        Dialog dialog=new Dialog(this);
-        View view=getLayoutInflater().inflate(R.layout.calling_request_alert_layout,null,false);
-        dialog.setContentView(view);
-        dialog.setCancelable(false);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        CircleImageView circleImageView=dialog.findViewById(R.id.image_view);
 
-        FloatingActionButton reject=dialog.findViewById(R.id.reject);
-        FloatingActionButton accept=dialog.findViewById(R.id.accept);
-        Picasso.get().load(call.getSender().getAvatar()).into(circleImageView);
-        accept.setOnClickListener(v -> {
-           ApiCalls.acceptCall(this,this,call);
-           dialog.dismiss();
-        });
 
-        reject.setOnClickListener(v->{
-            ApiCalls.rejectCall(this,this,call);
-            dialog.dismiss();
 
-        });
-        dialog.show();
 
-    }
-
-    @Override
-    public void reject(Call call) {
-        Toast.makeText(ChatActivity.this,call.getSender().toString()+ " call has been rejected",Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void accept(Call call) {
-        Intent intent = new Intent(this, CallingActivity.class);
-        intent.putExtra("receiverUid", "");
-        intent.putExtra("session_id",call.getSessionId());
-        startActivity(intent);
-
-    }
 }

@@ -4,10 +4,15 @@
       <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-3/305c0e05eabfc2aee08c241d4d3f3be8/transformed/jetified-react-native-community_netinfo-4.1.5-cometchat-7346414/jars/classes.jar!/" />
       <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/305c0e05eabfc2aee08c241d4d3f3be8/transformed/jetified-react-native-community_netinfo-4.1.5-cometchat-7346414/res" />
       <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/305c0e05eabfc2aee08c241d4d3f3be8/transformed/jetified-react-native-community_netinfo-4.1.5-cometchat-7346414/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/305c0e05eabfc2aee08c241d4d3f3be8/transformed/jetified-react-native-community_netinfo-4.1.5-cometchat-7346414/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/453a2be3584e6974300bc0cacc2e8c4e/transformed/jetified-react-native-community_netinfo-4.1.5-cometchat-7346414/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/453a2be3584e6974300bc0cacc2e8c4e/transformed/jetified-react-native-community_netinfo-4.1.5-cometchat-7346414/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/453a2be3584e6974300bc0cacc2e8c4e/transformed/jetified-react-native-community_netinfo-4.1.5-cometchat-7346414/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.facebook.react/react-native-community_netinfo/4.1.5-cometchat-7346414/6ca661750e3bc2be2b7c4353316d4a8eabfe92f2/react-native-community_netinfo-4.1.5-cometchat-7346414-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.react/react-native-community_netinfo/4.1.5-cometchat-7346414/6ca661750e3bc2be2b7c4353316d4a8eabfe92f2/react-native-community_netinfo-4.1.5-cometchat-7346414-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

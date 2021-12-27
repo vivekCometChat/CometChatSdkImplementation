@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.qifan.typingIndicator:typingIndicator:0.1.0@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/b5a12f427fed3ec265d17ce16250101a/transformed/jetified-typingIndicator-0.1.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b5a12f427fed3ec265d17ce16250101a/transformed/jetified-typingIndicator-0.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b5a12f427fed3ec265d17ce16250101a/transformed/jetified-typingIndicator-0.1.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.qifan.typingIndicator/typingIndicator/0.1.0/c356710f19839e8c235d840fa07df2cb2677e2d9/typingIndicator-0.1.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.qifan.typingIndicator/typingIndicator/0.1.0/7d7d55016433fd7e6ef440c3a271bf08f43811f8/typingIndicator-0.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

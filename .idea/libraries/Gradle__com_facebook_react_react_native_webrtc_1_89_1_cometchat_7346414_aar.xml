@@ -6,10 +6,16 @@
       <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-3/1c33ccc8f99088129232c6397692a235/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/jars/libs/libwebrtc.jar!/" />
       <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/1c33ccc8f99088129232c6397692a235/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/res" />
       <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/1c33ccc8f99088129232c6397692a235/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/11b7181207853c61c7f4ed324c630bc9/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/11b7181207853c61c7f4ed324c630bc9/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/jars/libs/libwebrtc.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/11b7181207853c61c7f4ed324c630bc9/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/11b7181207853c61c7f4ed324c630bc9/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/11b7181207853c61c7f4ed324c630bc9/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/jars/libs/libjingle_peerconnection.so.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.facebook.react/react-native-webrtc/1.89.1-cometchat-7346414/30d8838f0508d82337f887561d198d1bb7fdb0aa/react-native-webrtc-1.89.1-cometchat-7346414-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.react/react-native-webrtc/1.89.1-cometchat-7346414/30d8838f0508d82337f887561d198d1bb7fdb0aa/react-native-webrtc-1.89.1-cometchat-7346414-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

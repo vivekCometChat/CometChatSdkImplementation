@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <Button
             android:id="@+id/reject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,15 +43,14 @@
             android:src="@drawable/ic_baseline_call_end_24"
             android:text="send"
             android:tint="@color/white"
-            android:translationZ="1dp"
-            app:maxImageSize="45dp" />
+            />
 
         <Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <Button
             android:id="@+id/accept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,8 +59,7 @@
             android:src="@drawable/ic_baseline_call_24"
             android:text="send"
             android:tint="@color/white"
-            android:translationZ="1dp"
-            app:maxImageSize="45dp" />
+       />
 
         <Space
             android:layout_width="0dp"

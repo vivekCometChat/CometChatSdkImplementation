@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.CallReciverActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/call_notify_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/persons_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black"
+                android:src="@drawable/img_person_test" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="20dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_arrow_back"
+                    android:visibility="gone"
+                    app:tint="@color/black" />
+
+                <TextView
+                    android:id="@+id/caller_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="vivek Prajapati "
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Calling... "
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="50dp"
+                android:gravity="center_vertical">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+
+                <ImageView
+                    android:id="@+id/reject_call"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/circular_grey_border_solid"
+                    android:backgroundTint="@android:color/holo_red_dark"
+                    android:padding="10dp"
+                    android:src="@drawable/cancel_call"
+                    app:tint="@color/white" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/accept_call"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/circular_grey_border_solid"
+                    android:backgroundTint="@android:color/holo_green_dark"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_baseline_call_24"
+                    app:tint="@color/white" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
+        </FrameLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            android:id="@+id/calling_container">
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/call_controls"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/chat"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:onClick="chat"
+                android:background="@drawable/circular_grey_border_solid"
+                android:padding="10dp"
+                android:src="@drawable/chat"
+                app:tint="@color/black" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/mute"
+                android:layout_width="50dp"
+                android:onClick="mute"
+                android:layout_height="50dp"
+                android:background="@drawable/circular_grey_border_solid"
+                android:padding="10dp"
+                android:src="@drawable/mute"
+                app:tint="@android:color/black" />
+
+            <ImageView
+                android:id="@+id/unmute"
+                android:layout_width="50dp"
+                android:onClick="unMute"
+                android:layout_height="50dp"
+                android:background="@drawable/circular_grey_border_solid"
+                android:padding="10dp"
+                android:rotationY="180"
+                android:src="@drawable/voice_muted"
+                android:visibility="gone"
+                app:tint="@android:color/black" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/cancel_call"
+                android:layout_width="60dp"
+                android:onClick="endCall"
+                android:layout_height="60dp"
+                android:background="@drawable/circular_grey_border_solid"
+                android:backgroundTint="@android:color/holo_red_dark"
+                android:padding="10dp"
+                android:src="@drawable/cancel_call"
+                app:tint="@color/white" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/off_camera"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/circular_grey_border_solid"
+                android:onClick="camOff"
+                android:padding="10dp"
+                android:src="@drawable/video"
+                app:tint="@android:color/black" />
+
+            <ImageView
+                android:id="@+id/on_camera"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:onClick="onCam"
+                android:background="@drawable/circular_grey_border_solid"
+                android:padding="10dp"
+                android:src="@drawable/no_video"
+                android:visibility="gone"
+                app:tint="@android:color/black" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/off_speaker"
+                android:layout_width="50dp"
+                android:onClick="offSpeaker"
+                android:layout_height="50dp"
+                android:background="@drawable/circular_grey_border_solid"
+                android:padding="10dp"
+                android:src="@drawable/volume"
+                app:tint="@android:color/black" />
+
+            <ImageView
+                android:id="@+id/on_speaker"
+                android:layout_width="50dp"
+                android:onClick="onSpeaker"
+                android:layout_height="50dp"
+                android:background="@drawable/circular_grey_border_solid"
+                android:padding="10dp"
+                android:src="@drawable/volume_cancel"
+                android:visibility="gone"
+                app:tint="@android:color/black" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
