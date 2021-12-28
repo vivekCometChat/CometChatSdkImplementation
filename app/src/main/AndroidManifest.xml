@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
-        android:name=".activities.App"
+        android:name=".utilities.App"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,6 +26,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Cometimplementation">
+        <activity
+            android:name=".activities.ContactImportingAndProcessingActivity"
+            android:exported="true" />
         <activity
             android:name=".activities.ContactsActivity"
             android:exported="true" />

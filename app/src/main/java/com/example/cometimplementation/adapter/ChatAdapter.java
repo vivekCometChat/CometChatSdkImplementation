@@ -16,7 +16,7 @@ import com.cometchat.pro.models.BaseMessage;
 import com.cometchat.pro.models.MediaMessage;
 import com.cometchat.pro.models.TextMessage;
 import com.example.cometimplementation.R;
-import com.example.cometimplementation.SharedPrefData;
+import com.example.cometimplementation.utilities.SharedPrefData;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 
@@ -74,7 +74,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.myViewHolder> 
             Picasso.get().load(textMessage.getAttachment().getFileUrl()).into(holder.image);
         }
     }
-
 
     @Override
     public int getItemCount() {

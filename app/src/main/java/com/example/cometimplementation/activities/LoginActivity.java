@@ -13,10 +13,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 
-import com.example.cometimplementation.ApiCalls;
+import com.example.cometimplementation.utilities.ApiCalls;
 import com.example.cometimplementation.R;
-import com.example.cometimplementation.Utilities;
-import com.example.cometimplementation.SharedPrefData;
+import com.example.cometimplementation.utilities.Utilities;
+import com.example.cometimplementation.utilities.SharedPrefData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -46,7 +46,6 @@ public class LoginActivity extends AppCompatActivity {
         login = findViewById(R.id.login);
         uid_input = findViewById(R.id.uid_input);
         message = findViewById(R.id.message);
-        ApiCalls.cometChatInitialize(this);
         uid_input.addTextChangedListener(textWatcher);
         getSupportActionBar().setTitle("Login");
         login.setEnabled(false);

@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cometchat.pro.models.User;
-import com.example.cometimplementation.ApiCalls;
-import com.example.cometimplementation.AppConfig;
+import com.example.cometimplementation.utilities.ApiCalls;
+import com.example.cometimplementation.utilities.AppConfig;
 import com.example.cometimplementation.Interfaces.Listeners;
 import com.example.cometimplementation.R;
 import com.example.cometimplementation.models.UserPojo;

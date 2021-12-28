@@ -27,11 +27,9 @@ import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.core.UsersRequest;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.User;
-import com.example.cometimplementation.ApiCalls;
+import com.example.cometimplementation.utilities.ApiCalls;
 import com.example.cometimplementation.R;
-import com.example.cometimplementation.activities.CallingActivity;
 import com.example.cometimplementation.activities.ContactsActivity;
-import com.example.cometimplementation.activities.MainActivity;
 import com.example.cometimplementation.adapter.RecyclerAdapter;
 import com.example.cometimplementation.models.UserPojo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -68,7 +66,6 @@ public class ChattingUsersFragment extends Fragment {
     }
 
     private void initView(View view) {
-        ApiCalls.cometChatInitialize(getActivity());
         recyclerView = view.findViewById(R.id.recyclerView);
         message = view.findViewById(R.id.message);
         show_contacts_btn = view.findViewById(R.id.show_contacts_btn);

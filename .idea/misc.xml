@@ -7,6 +7,7 @@
         <entry key="app/src/main/res/drawable/bottom_nav_item_click.xml" value="0.20615384615384616" />
         <entry key="app/src/main/res/drawable/bottom_navigation_bg.xml" value="0.209375" />
         <entry key="app/src/main/res/drawable/circular_grey_border_solid.xml" value="0.15260416666666668" />
+        <entry key="app/src/main/res/drawable/dot_bg.xml" value="0.20615384615384616" />
         <entry key="app/src/main/res/drawable/indicator_background.xml" value="0.1515625" />
         <entry key="app/src/main/res/drawable/receivers_background.xml" value="0.15260416666666668" />
         <entry key="app/src/main/res/layout/activity_call_reciver.xml" value="0.22" />
@@ -19,7 +20,10 @@
         <entry key="app/src/main/res/layout/contact_recycler_lay.xml" value="0.13677536231884058" />
         <entry key="app/src/main/res/layout/fragment_chatting_users.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/fragment_contact.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/fragment_recent_chat.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/message_layout.xml" value="0.21" />
+        <entry key="app/src/main/res/layout/recent_chat.xml" value="0.1359375" />
+        <entry key="app/src/main/res/layout/recent_chat_row.xml" value="0.25" />
         <entry key="app/src/main/res/layout/recycler_lay.xml" value="0.13677536231884058" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.19322916666666667" />
       </map>

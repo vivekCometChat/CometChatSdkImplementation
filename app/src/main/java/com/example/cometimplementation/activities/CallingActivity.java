@@ -1,10 +1,7 @@
 package com.example.cometimplementation.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.Manifest;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,21 +20,13 @@ import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.AudioMode;
 import com.cometchat.pro.models.User;
-import com.example.cometimplementation.ApiCalls;
+import com.example.cometimplementation.utilities.ApiCalls;
 import com.example.cometimplementation.Interfaces.CallStatus;
 import com.example.cometimplementation.Interfaces.Listeners;
 import com.example.cometimplementation.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CallingActivity extends AppCompatActivity implements CallStatus, Listeners, CometChat.OngoingCallListener {
     RelativeLayout container;
@@ -237,7 +226,7 @@ public class CallingActivity extends AppCompatActivity implements CallStatus, Li
     }
 
     public void unMute(View view) {
-        callManager.muteAudio(true);
+        callManager.muteAudio(false);
         mute.setVisibility(View.VISIBLE);
         unmute.setVisibility(View.GONE);
     }

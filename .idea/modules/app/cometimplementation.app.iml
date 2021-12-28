@@ -65,6 +65,7 @@
     <orderEntry type="library" name="Gradle: com.squareup.okhttp3:okhttp-urlconnection:3.12.1" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.okhttp3:okhttp:3.12.13" level="project" />
     <orderEntry type="library" name="Gradle: com.squareup.okio:okio:1.15.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.8.7" level="project" />
     <orderEntry type="library" name="Gradle: org.igniterealtime.smack:smack-android:4.1.0" level="project" />
     <orderEntry type="library" name="Gradle: org.igniterealtime.smack:smack-resolver-minidns:4.1.0" level="project" />
     <orderEntry type="library" name="Gradle: de.measite.minidns:minidns:0.1.7" level="project" />

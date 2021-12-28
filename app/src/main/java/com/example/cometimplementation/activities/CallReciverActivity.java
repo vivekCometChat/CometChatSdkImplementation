@@ -1,11 +1,9 @@
 package com.example.cometimplementation.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -29,7 +27,7 @@ import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.AudioMode;
 import com.cometchat.pro.models.User;
-import com.example.cometimplementation.ApiCalls;
+import com.example.cometimplementation.utilities.ApiCalls;
 import com.example.cometimplementation.Interfaces.CallStatus;
 import com.example.cometimplementation.R;
 import com.karumi.dexter.Dexter;
@@ -238,7 +236,7 @@ public class CallReciverActivity extends AppCompatActivity implements CallStatus
     }
 
     public void unMute(View view) {
-        callManager.muteAudio(true);
+        callManager.muteAudio(false);
         mute.setVisibility(View.VISIBLE);
         unmute.setVisibility(View.GONE);
     }
