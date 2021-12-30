@@ -75,7 +75,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private String listenerID = "ChatActivity.java";
     private Uri resultUri;
     private TypingIndicator typingIndicator;
-    private String listenerId = "123456";
 
     long delay = 2000;
     long last_text_edit = 0;
@@ -384,7 +383,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPause() {
         super.onPause();
         CometChat.removeMessageListener(listenerID);
-        CometChat.removeMessageListener(listenerId);
 
 
     }

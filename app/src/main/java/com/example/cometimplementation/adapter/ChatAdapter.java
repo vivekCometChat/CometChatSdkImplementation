@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cometchat.pro.constants.CometChatConstants;
+import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.models.BaseMessage;
 import com.cometchat.pro.models.MediaMessage;
 import com.cometchat.pro.models.TextMessage;
@@ -63,6 +65,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.myViewHolder> 
     }
 
     private void setMediaMessage(MediaMessage mediaMessage, myViewHolder holder) {
+        CometChat.markAsRead(mediaMessage.getId(),mediaMessage.getSender().getUid(), CometChatConstants.RECEIVER_TYPE_USER);
         holder.message.setText(mediaMessage.getAttachment().getFileUrl());
         holder.message.setVisibility(View.GONE);
         holder.image.setVisibility(View.VISIBLE);
@@ -70,6 +73,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.myViewHolder> 
     }
 
     private void setTextMessages(TextMessage textMessage, myViewHolder holder) {
+        CometChat.markAsRead(textMessage.getId(),textMessage.getSender().getUid(), CometChatConstants.RECEIVER_TYPE_USER);
         holder.message.setText(textMessage.getText());
         holder.time.setText(Utilities.convertMillisToTime(textMessage.getDeliveredAt()));
         holder.image.setVisibility(View.GONE);
