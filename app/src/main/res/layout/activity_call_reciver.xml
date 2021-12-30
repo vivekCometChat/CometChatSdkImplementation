@@ -110,6 +110,7 @@
             </LinearLayout>
         </FrameLayout>
         <RelativeLayout
+            android:layout_above="@id/call_controls"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="visible"
@@ -120,6 +121,8 @@
         <LinearLayout
             android:id="@+id/call_controls"
             android:visibility="gone"
+            android:padding="10dp"
+            android:background="@android:color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

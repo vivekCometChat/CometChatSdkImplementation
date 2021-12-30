@@ -2,10 +2,12 @@ package com.example.cometimplementation.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.Call;
 import com.cometchat.pro.core.CometChat;
+import com.cometchat.pro.core.MessagesRequest;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.BaseMessage;
 import com.cometchat.pro.models.CustomMessage;
@@ -32,9 +35,12 @@ import com.cometchat.pro.models.MediaMessage;
 import com.cometchat.pro.models.TextMessage;
 import com.cometchat.pro.models.TypingIndicator;
 import com.cometchat.pro.models.User;
+import com.example.cometimplementation.Interfaces.CallBackListener;
 import com.example.cometimplementation.Interfaces.Listeners;
 import com.example.cometimplementation.R;
 import com.example.cometimplementation.adapter.ChatAdapter;
+import com.example.cometimplementation.utilities.ApiCalls;
+import com.example.cometimplementation.utilities.SharedPrefData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -54,12 +60,12 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatActivity extends AppCompatActivity implements View.OnClickListener, Listeners{
+public class ChatActivity extends AppCompatActivity implements View.OnClickListener, CallBackListener {
 
     private static final String TAG = "check_call";
     private String receiverUid = "", receiverImg = "", receiverName = "";
     private CircleImageView profile_img;
-    private TextView name,indicator;
+    private TextView name, indicator;
     private EditText input_message;
     private ImageView gallery, image, call;
     private FloatingActionButton send;
@@ -74,9 +80,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     long delay = 2000;
     long last_text_edit = 0;
     Handler handler = new Handler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         setContentView(R.layout.activity_chat);
         initView();
 
@@ -104,17 +113,18 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         name.setText(receiverName);
         Picasso.get().load(receiverImg).into(profile_img);
         setChatRecyclerView();
-
         input_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
+
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 CometChat.startTyping(typingIndicator);
                 handler.removeCallbacks(input_finish_checker);
             }
+
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editable.length() > 0) {
@@ -125,6 +135,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         });
 
     }
+
 
     private Runnable input_finish_checker = new Runnable() {
         public void run() {
@@ -143,6 +154,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         recycler_chat.setLayoutManager(new LinearLayoutManager(this));
         chatAdapter = new ChatAdapter(this, messages);
         recycler_chat.setAdapter(chatAdapter);
+        ApiCalls.fetchPreviousMessages(this, receiverUid, this);
 
     }
 
@@ -162,7 +174,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.call:
                 initiateCall();
-
+                break;
+            case R.id.input_message:
+                if (messages.size() > 0)
+                    recycler_chat.smoothScrollToPosition(messages.size() - 1);
+                break;
 
         }
 
@@ -170,7 +186,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initiateCall() {
 
-        Dexter.withActivity(this).withPermissions(Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO).withListener(new MultiplePermissionsListener() {
+        Dexter.withActivity(this).withPermissions(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO).withListener(new MultiplePermissionsListener() {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
                 Intent intent = new Intent(ChatActivity.this, CallingActivity.class);
@@ -186,9 +202,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         }).check();
-
-
-
 
     }
 
@@ -271,7 +284,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 image.setVisibility(View.GONE);
                 messages.add(mediaMessage);
                 chatAdapter.notifyDataSetChanged();
-                recycler_chat.smoothScrollToPosition(messages.size()-1);
+                recycler_chat.smoothScrollToPosition(messages.size() - 1);
 
             }
 
@@ -291,10 +304,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 CometChat.endTyping(typingIndicator);
                 Log.d("check", "Message sent successfully: " + textMessage.toString());
                 input_message.getText().clear();
-                hideKeyBoard();
+//                hideKeyBoard();
                 messages.add(textMessage);
                 chatAdapter.notifyDataSetChanged();
-                recycler_chat.smoothScrollToPosition(messages.size()-1);
+                recycler_chat.smoothScrollToPosition(messages.size() - 1);
 
             }
 
@@ -318,14 +331,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("check", "Text message received successfully: " + textMessage.toString());
                 messages.add(textMessage);
                 chatAdapter.notifyDataSetChanged();
-                recycler_chat.smoothScrollToPosition(messages.size()-1);
+                recycler_chat.smoothScrollToPosition(messages.size() - 1);
             }
 
             @Override
             public void onMediaMessageReceived(MediaMessage mediaMessage) {
                 messages.add(mediaMessage);
                 chatAdapter.notifyDataSetChanged();
-                recycler_chat.smoothScrollToPosition(messages.size()-1);
+                recycler_chat.smoothScrollToPosition(messages.size() - 1);
 
                 Log.d("check", "Media message received successfully: " + mediaMessage.toString());
             }
@@ -334,15 +347,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             public void onCustomMessageReceived(CustomMessage customMessage) {
                 Log.d("check", "Custom message received successfully: " + customMessage.toString());
             }
-        });
-//        ApiCalls.callInformation(this, this);
 
-        CometChat.addMessageListener("Listener 1", new CometChat.MessageListener() {
             @Override
             public void onTypingStarted(TypingIndicator typingIndicator) {
                 Log.d(TAG, " Typing Started : " + typingIndicator.toString());
                 indicator.setVisibility(View.VISIBLE);
             }
+
             @Override
             public void onTypingEnded(TypingIndicator typingIndicator) {
                 Log.d(TAG, " Typing Ended : " + typingIndicator.toString());
@@ -350,6 +361,21 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
 
         });
+
+//        CometChat.addMessageListener("Listener 1", new CometChat.MessageListener() {
+//            @Override
+//            public void onTypingStarted(TypingIndicator typingIndicator) {
+//                Log.d(TAG, " Typing Started : " + typingIndicator.toString());
+//                indicator.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onTypingEnded(TypingIndicator typingIndicator) {
+//                Log.d(TAG, " Typing Ended : " + typingIndicator.toString());
+//                indicator.setVisibility(View.GONE);
+//            }
+//
+//        });
 
     }
 
@@ -381,36 +407,25 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         return cursor.getString(column_index);
     }
 
-    @Override
-    public void addedNewUser(User user) {
 
+    @Override
+    public void onSuccess(List<BaseMessage> list) {
+        for (BaseMessage message : list) {
+            if (message instanceof TextMessage) {
+                messages.add(message);
+                Log.d("", "Text message received successfully: " + ((TextMessage) message).toString());
+            } else if (message instanceof MediaMessage) {
+                messages.add(message);
+                Log.d("", "Media message received successfully: " + ((MediaMessage) message).toString());
+            }
+        }
+        chatAdapter.notifyDataSetChanged();
+        if (messages.size() > 0)
+            recycler_chat.smoothScrollToPosition(messages.size() - 1);
     }
 
     @Override
-    public void receiveCall(Call call) {
-
-
+    public void onError(CometChatException e) {
 
     }
-
-    @Override
-    public void acceptedOutGoingCall(Call call) {
-
-    }
-
-    @Override
-    public void rejectedOutGoingCall(Call call) {
-
-    }
-
-    @Override
-    public void canceledOutGoingCall(Call call) {
-
-    }
-
-
-
-
-
-
 }

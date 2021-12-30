@@ -4,6 +4,15 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.20833333333333334" />
+        <entry key="..\:/cometchat app/CometChatSdkImplementation/app/src/main/res/layout/activity_call_reciver.xml" value="0.2753846153846154" />
+        <entry key="..\:/cometchat app/CometChatSdkImplementation/app/src/main/res/layout/activity_calling.xml" value="0.2796875" />
+        <entry key="..\:/cometchat app/CometChatSdkImplementation/app/src/main/res/layout/activity_chat.xml" value="0.3625" />
+        <entry key="..\:/cometchat app/CometChatSdkImplementation/app/src/main/res/layout/activity_contact_importing_and_processing.xml" value="0.3625" />
+        <entry key="..\:/cometchat app/CometChatSdkImplementation/app/src/main/res/layout/activity_contacts.xml" value="0.3625" />
+        <entry key="..\:/cometchat app/CometChatSdkImplementation/app/src/main/res/layout/fragment_contact.xml" value="0.3625" />
+        <entry key="..\:/cometchat app/CometChatSdkImplementation/app/src/main/res/layout/message_layout.xml" value="0.3625" />
+        <entry key="..\:/cometchat app/CometChatSdkImplementation/app/src/main/res/layout/recent_chat_row.xml" value="0.253125" />
+        <entry key="..\:/cometchat app/CometChatSdkImplementation/app/src/main/res/menu/action_bar_menu.xml" value="0.3625" />
         <entry key="app/src/main/res/drawable/bottom_nav_item_click.xml" value="0.20615384615384616" />
         <entry key="app/src/main/res/drawable/bottom_navigation_bg.xml" value="0.209375" />
         <entry key="app/src/main/res/drawable/circular_grey_border_solid.xml" value="0.15260416666666668" />
@@ -29,7 +38,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

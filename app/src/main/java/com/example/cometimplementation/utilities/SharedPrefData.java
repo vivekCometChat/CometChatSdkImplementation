@@ -2,6 +2,7 @@ package com.example.cometimplementation.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.cometchat.pro.models.User;
 import com.example.cometimplementation.Interfaces.Listeners;
@@ -42,7 +43,6 @@ public class SharedPrefData {
         return sharedPreferences.getString(login_name, "");
     }
 
-
     public static void saveContacts(Context context, List<UserPojo> users) {
         Gson gson = new Gson();
         if (users != null) {
@@ -64,8 +64,7 @@ public class SharedPrefData {
 
     }
 
-
-    public static void saveCommonUser(Context context, List<User> users_list) {
+    public static void saveCommonUser(Context context, List<UserPojo> users_list) {
         Gson gson = new Gson();
         if (users_list != null) {
             SharedPreferences sharedPreferences = context.getSharedPreferences(users, Context.MODE_PRIVATE);
@@ -76,11 +75,11 @@ public class SharedPrefData {
         }
     }
 
-    public static List<User> getCommonUser(Context context) {
+    public static List<UserPojo> getCommonUser(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(users, Context.MODE_PRIVATE);
         String jsonString = sharedPreferences.getString(users_data, "");
         Gson gson = new Gson();
-        Type type = new TypeToken<List<User>>() {
+        Type type = new TypeToken<List<UserPojo>>() {
         }.getType();
         return gson.fromJson(jsonString, type);
     }

@@ -12,14 +12,27 @@ import com.cometchat.pro.core.AppSettings;
 import com.cometchat.pro.core.Call;
 import com.cometchat.pro.core.CallSettings;
 import com.cometchat.pro.core.CometChat;
+import com.cometchat.pro.core.MessagesRequest;
+import com.cometchat.pro.core.UsersRequest;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.AudioMode;
+import com.cometchat.pro.models.BaseMessage;
+import com.cometchat.pro.models.Conversation;
+import com.cometchat.pro.models.MediaMessage;
+import com.cometchat.pro.models.TextMessage;
 import com.cometchat.pro.models.User;
+import com.example.cometimplementation.Interfaces.CallBackListener;
+import com.example.cometimplementation.Interfaces.CallBackUnreadMessageCount;
 import com.example.cometimplementation.Interfaces.CallStatus;
+import com.example.cometimplementation.Interfaces.FetchUserCallBack;
 import com.example.cometimplementation.Interfaces.Listeners;
+import com.example.cometimplementation.activities.ContactImportingAndProcessingActivity;
 import com.example.cometimplementation.activities.LoginActivity;
 import com.example.cometimplementation.activities.MainActivity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class ApiCalls {
@@ -48,17 +61,19 @@ public class ApiCalls {
         CometChat.addCallListener(listenerId, new CometChat.CallListener() {
             @Override
             public void onIncomingCallReceived(Call call) {
-                    listeners.receiveCall(call);
+                listeners.receiveCall(call);
             }
 
             @Override
             public void onOutgoingCallAccepted(Call call) {
                 listeners.acceptedOutGoingCall(call);
             }
+
             @Override
             public void onOutgoingCallRejected(Call call) {
                 listeners.rejectedOutGoingCall(call);
             }
+
             @Override
             public void onIncomingCallCancelled(Call call) {
                 listeners.canceledOutGoingCall(call);
@@ -163,9 +178,12 @@ public class ApiCalls {
             @Override
             public void onSuccess(User user) {
                 SharedPrefData.saveUserIdName(context, user.getUid(), user.getName());
-                context.startActivity(new Intent(context, MainActivity.class));
+                if (SharedPrefData.getSaveContacts(context)!=null && SharedPrefData.getCommonUser(context)!=null) {
+                    context.startActivity(new Intent(context, MainActivity.class));
+                } else {
+                    context.startActivity(new Intent(context, ContactImportingAndProcessingActivity.class));
+                }
                 ((LoginActivity) context).finish();
-
             }
 
             @Override
@@ -177,7 +195,65 @@ public class ApiCalls {
 
     }
 
+    public static void fetchPreviousMessages(Context context, String receivers_uid, CallBackListener listener) {
+        MessagesRequest messagesRequest = new MessagesRequest.MessagesRequestBuilder()
+                .setLimit(50)
+                .setUID(receivers_uid)
+                .build();
 
+        messagesRequest.fetchPrevious(new CometChat.CallbackListener<List<BaseMessage>>() {
+            @Override
+            public void onSuccess(List<BaseMessage> list) {
+                listener.onSuccess(list);
+
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                listener.onError(e);
+            }
+        });
+
+
+    }
+
+    public static void fetchCometChatUsers(Context context, FetchUserCallBack fetchUserCallBack) {
+
+        UsersRequest usersRequest = new UsersRequest.UsersRequestBuilder().setLimit(30).build();
+
+        usersRequest.fetchNext(new CometChat.CallbackListener<List<User>>() {
+            @Override
+            public void onSuccess(List<User> list) {
+                Log.d("check", "User list received: " + list.size());
+                fetchUserCallBack.onSuccess(list);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                fetchUserCallBack.onError(e);
+                Log.d("check", "User list fetching failed with exception: " + e.getMessage());
+            }
+        });
+
+    }
+
+    public static void getUnreadMessageCountForAllUsers(Context context, Conversation conversation, CallBackUnreadMessageCount callBackUnreadMessageCount){
+
+        CometChat.getUnreadMessageCountForAllUsers(new CometChat.CallbackListener<HashMap<String, Integer>>() {
+            @Override
+            public void onSuccess(HashMap<String, Integer> stringIntegerHashMap) {
+                conversation.setUnreadMessageCount(stringIntegerHashMap.get(conversation.getLastMessage().getSender().getUid()));
+                callBackUnreadMessageCount.unreadMessageCountSuccess(conversation);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                callBackUnreadMessageCount.unreadMessageCountError(e);
+            }
+
+        });
+
+    }
 
 
 }

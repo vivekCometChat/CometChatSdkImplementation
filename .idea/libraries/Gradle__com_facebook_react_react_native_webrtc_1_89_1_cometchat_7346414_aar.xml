@@ -11,6 +11,11 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/11b7181207853c61c7f4ed324c630bc9/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/11b7181207853c61c7f4ed324c630bc9/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/jars/classes.jar!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/11b7181207853c61c7f4ed324c630bc9/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/jars/libs/libjingle_peerconnection.so.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1844cac3ebb0cf19d6580a8a251a0e1d/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/1844cac3ebb0cf19d6580a8a251a0e1d/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1844cac3ebb0cf19d6580a8a251a0e1d/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/1844cac3ebb0cf19d6580a8a251a0e1d/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/jars/libs/libjingle_peerconnection.so.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/1844cac3ebb0cf19d6580a8a251a0e1d/transformed/jetified-react-native-webrtc-1.89.1-cometchat-7346414/jars/libs/libwebrtc.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

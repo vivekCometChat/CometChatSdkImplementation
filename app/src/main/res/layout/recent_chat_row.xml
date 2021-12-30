@@ -33,8 +33,17 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:maxLines="1"
+            android:visibility="gone"
             android:textColor="@color/black"
             android:textSize="16sp" />
+        <ImageView
+            android:id="@+id/img_message"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:visibility="gone"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/gallary_icon"
+            />
     </LinearLayout>
 
     <LinearLayout

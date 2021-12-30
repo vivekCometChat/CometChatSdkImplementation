@@ -184,6 +184,7 @@
         </FrameLayout>
 
         <RelativeLayout
+            android:layout_above="@id/call_controls"
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
@@ -193,6 +194,8 @@
         <LinearLayout
             android:id="@+id/call_controls"
             android:visibility="gone"
+            android:padding="10dp"
+            android:background="@android:color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
