@@ -1,5 +1,6 @@
 package com.example.cometimplementation.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -20,6 +21,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,6 +39,7 @@ import com.cometchat.pro.models.TypingIndicator;
 import com.cometchat.pro.models.User;
 import com.example.cometimplementation.Interfaces.CallBackListener;
 import com.example.cometimplementation.Interfaces.Listeners;
+import com.example.cometimplementation.Interfaces.MessageListiners;
 import com.example.cometimplementation.R;
 import com.example.cometimplementation.adapter.ChatAdapter;
 import com.example.cometimplementation.utilities.ApiCalls;
@@ -55,12 +58,13 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatActivity extends AppCompatActivity implements View.OnClickListener, CallBackListener {
+public class ChatActivity extends AppCompatActivity implements View.OnClickListener, CallBackListener, MessageListiners {
 
     private static final String TAG = "check_call";
     private String receiverUid = "", receiverImg = "", receiverName = "";
@@ -80,6 +84,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     long last_text_edit = 0;
     Handler handler = new Handler();
 
+    MessagesRequest messagesRequest;
+    LinearLayoutManager linearLayoutManager;
+    boolean isScrolling = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +96,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_chat);
         initView();
 
+        recycler_chat.addOnScrollListener(onScrollListener);
 
     }
 
@@ -95,6 +104,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         receiverUid = getIntent().getStringExtra("uid");
         receiverImg = getIntent().getStringExtra("img_url");
         receiverName = getIntent().getStringExtra("name");
+
+        linearLayoutManager = new LinearLayoutManager(this);
+        messagesRequest = new MessagesRequest.MessagesRequestBuilder()
+                .setLimit(30)
+                .setUID(receiverUid)
+                .build();
 
         profile_img = findViewById(R.id.profile_img);
         indicator = findViewById(R.id.indicator);
@@ -133,15 +148,36 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+
     }
 
+    private RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+
+            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                isScrolling = true;
+            }
+
+
+        }
+
+        @Override
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+
+            if (!recyclerView.canScrollVertically(-1)) {
+                fetchData();
+            }
+
+
+        }
+    };
 
     private Runnable input_finish_checker = new Runnable() {
         public void run() {
             if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
-                // TODO: do what you need here
-                // ............
-                // ............
                 CometChat.endTyping(typingIndicator);
 
             }
@@ -150,13 +186,17 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setChatRecyclerView() {
 
-        recycler_chat.setLayoutManager(new LinearLayoutManager(this));
+        recycler_chat.setLayoutManager(linearLayoutManager);
         chatAdapter = new ChatAdapter(this, messages);
         recycler_chat.setAdapter(chatAdapter);
-        ApiCalls.fetchPreviousMessages(this, receiverUid, this);
+        fetchData();
 
     }
 
+    private void fetchData() {
+        ApiCalls.fetchPreviousMessages(this, messagesRequest, isScrolling, this);
+
+    }
 
     public void back(View view) {
         onBackPressed();
@@ -176,7 +216,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.input_message:
                 if (messages.size() > 0)
-                    recycler_chat.smoothScrollToPosition(messages.size() - 1);
+                    linearLayoutManager.scrollToPosition(messages.size() - 1);
                 break;
 
         }
@@ -248,7 +288,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     private void startCrop(Uri imageUri) {
         CropImage.activity(imageUri).setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1, 1).setMultiTouchEnabled(true).start(this);
     }
@@ -283,7 +322,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 image.setVisibility(View.GONE);
                 messages.add(mediaMessage);
                 chatAdapter.notifyDataSetChanged();
-                recycler_chat.smoothScrollToPosition(messages.size() - 1);
+                linearLayoutManager.scrollToPosition(messages.size() - 1);
 
             }
 
@@ -306,7 +345,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 //                hideKeyBoard();
                 messages.add(textMessage);
                 chatAdapter.notifyDataSetChanged();
-                recycler_chat.smoothScrollToPosition(messages.size() - 1);
+                linearLayoutManager.scrollToPosition(messages.size() - 1);
 
             }
 
@@ -330,14 +369,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("check", "Text message received successfully: " + textMessage.toString());
                 messages.add(textMessage);
                 chatAdapter.notifyDataSetChanged();
-                recycler_chat.smoothScrollToPosition(messages.size() - 1);
+                linearLayoutManager.scrollToPosition(messages.size() - 1);
             }
 
             @Override
             public void onMediaMessageReceived(MediaMessage mediaMessage) {
                 messages.add(mediaMessage);
                 chatAdapter.notifyDataSetChanged();
-                recycler_chat.smoothScrollToPosition(messages.size() - 1);
+                linearLayoutManager.scrollToPosition(messages.size() - 1);
 
                 Log.d("check", "Media message received successfully: " + mediaMessage.toString());
             }
@@ -361,20 +400,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         });
 
-//        CometChat.addMessageListener("Listener 1", new CometChat.MessageListener() {
-//            @Override
-//            public void onTypingStarted(TypingIndicator typingIndicator) {
-//                Log.d(TAG, " Typing Started : " + typingIndicator.toString());
-//                indicator.setVisibility(View.VISIBLE);
-//            }
-//
-//            @Override
-//            public void onTypingEnded(TypingIndicator typingIndicator) {
-//                Log.d(TAG, " Typing Ended : " + typingIndicator.toString());
-//                indicator.setVisibility(View.GONE);
-//            }
-//
-//        });
 
     }
 
@@ -408,6 +433,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onSuccess(List<BaseMessage> list) {
+
         for (BaseMessage message : list) {
             if (message instanceof TextMessage) {
                 messages.add(message);
@@ -419,11 +445,49 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
         chatAdapter.notifyDataSetChanged();
         if (messages.size() > 0)
-            recycler_chat.smoothScrollToPosition(messages.size() - 1);
+            linearLayoutManager.scrollToPosition(messages.size() - 1);
+
+
     }
 
     @Override
     public void onError(CometChatException e) {
+
+    }
+
+    @Override
+    public void onMessageReceivedSuccess(List<BaseMessage> list, boolean isScrolling) {
+
+        if (!isScrolling) {
+            for (BaseMessage message : list) {
+                if (message instanceof TextMessage) {
+                    messages.add(message);
+                    Log.d("", "Text message received successfully: " + ((TextMessage) message).toString());
+                } else if (message instanceof MediaMessage) {
+                    messages.add(message);
+                    Log.d("", "Media message received successfully: " + ((MediaMessage) message).toString());
+                }
+            }
+            chatAdapter.notifyDataSetChanged();
+            if (messages.size() > 0)
+                linearLayoutManager.scrollToPosition(messages.size() - 1);
+        } else {
+            for (BaseMessage message : list) {
+                if (message instanceof TextMessage) {
+                    messages.add(0, message);
+                    Log.d("", "Text message received successfully: " + ((TextMessage) message).toString());
+                } else if (message instanceof MediaMessage) {
+                    messages.add(0, message);
+                    Log.d("", "Media message received successfully: " + ((MediaMessage) message).toString());
+                }
+            }
+            chatAdapter.notifyDataSetChanged();
+        }
+
+    }
+
+    @Override
+    public void onMessageReceivedError(CometChatException e) {
 
     }
 }

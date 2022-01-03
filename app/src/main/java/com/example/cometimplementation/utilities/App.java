@@ -26,6 +26,7 @@ public class App extends Application implements Listeners, CallStatus {
     public void onTerminate() {
         super.onTerminate();
         CometChat.removeMessageListener(listenerId);
+        CometChat.removeCallListener(listenerId);
     }
 
     @Override

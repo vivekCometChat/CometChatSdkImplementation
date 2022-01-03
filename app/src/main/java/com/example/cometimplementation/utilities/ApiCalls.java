@@ -12,6 +12,7 @@ import com.cometchat.pro.core.AppSettings;
 import com.cometchat.pro.core.Call;
 import com.cometchat.pro.core.CallSettings;
 import com.cometchat.pro.core.CometChat;
+import com.cometchat.pro.core.ConversationsRequest;
 import com.cometchat.pro.core.MessagesRequest;
 import com.cometchat.pro.core.UsersRequest;
 import com.cometchat.pro.exceptions.CometChatException;
@@ -24,8 +25,10 @@ import com.cometchat.pro.models.User;
 import com.example.cometimplementation.Interfaces.CallBackListener;
 import com.example.cometimplementation.Interfaces.CallBackUnreadMessageCount;
 import com.example.cometimplementation.Interfaces.CallStatus;
+import com.example.cometimplementation.Interfaces.ConversationsListener;
 import com.example.cometimplementation.Interfaces.FetchUserCallBack;
 import com.example.cometimplementation.Interfaces.Listeners;
+import com.example.cometimplementation.Interfaces.MessageListiners;
 import com.example.cometimplementation.activities.ContactImportingAndProcessingActivity;
 import com.example.cometimplementation.activities.LoginActivity;
 import com.example.cometimplementation.activities.MainActivity;
@@ -62,16 +65,19 @@ public class ApiCalls {
             @Override
             public void onIncomingCallReceived(Call call) {
                 listeners.receiveCall(call);
+                Log.d("awsedrfgscsc", "onIncomingCallReceived: ");
             }
 
             @Override
             public void onOutgoingCallAccepted(Call call) {
                 listeners.acceptedOutGoingCall(call);
+                Log.d("awsedrfgscsc", "onOutgoingCallAccepted: ");
             }
 
             @Override
             public void onOutgoingCallRejected(Call call) {
                 listeners.rejectedOutGoingCall(call);
+
             }
 
             @Override
@@ -195,26 +201,21 @@ public class ApiCalls {
 
     }
 
-    public static void fetchPreviousMessages(Context context, String receivers_uid, CallBackListener listener) {
-        MessagesRequest messagesRequest = new MessagesRequest.MessagesRequestBuilder()
-                .setLimit(50)
-                .setUID(receivers_uid)
-                .build();
-
+    public static void fetchPreviousMessages(Context context, MessagesRequest messagesRequest, boolean isScrolling, MessageListiners messageListiners) {
         messagesRequest.fetchPrevious(new CometChat.CallbackListener<List<BaseMessage>>() {
             @Override
             public void onSuccess(List<BaseMessage> list) {
-                listener.onSuccess(list);
+//                listener.onSuccess(list);
+                messageListiners.onMessageReceivedSuccess(list,isScrolling);
 
             }
 
             @Override
             public void onError(CometChatException e) {
-                listener.onError(e);
+//                listener.onError(e);
+                messageListiners.onMessageReceivedError(e);
             }
         });
-
-
     }
 
     public static void fetchCometChatUsers(Context context, FetchUserCallBack fetchUserCallBack) {
@@ -242,12 +243,16 @@ public class ApiCalls {
         CometChat.getUnreadMessageCountForAllUsers(new CometChat.CallbackListener<HashMap<String, Integer>>() {
             @Override
             public void onSuccess(HashMap<String, Integer> stringIntegerHashMap) {
+
                 conversation.setUnreadMessageCount(stringIntegerHashMap.get(conversation.getLastMessage().getSender().getUid()));
                 callBackUnreadMessageCount.unreadMessageCountSuccess(conversation);
+
             }
 
             @Override
             public void onError(CometChatException e) {
+                Log.d("check_the_count", "onSuccess: "+e.getMessage());
+
                 callBackUnreadMessageCount.unreadMessageCountError(e);
             }
 
@@ -255,5 +260,25 @@ public class ApiCalls {
 
     }
 
+    public static void getConversations(Context context, ConversationsRequest conversationsRequest, ConversationsListener listener,boolean isScrolling){
+
+        conversationsRequest.fetchNext(new CometChat.CallbackListener<List<Conversation>>() {
+            @Override
+            public void onSuccess(List<Conversation> conversations) {
+//                conversationList.addAll(conversations);
+//                recyclerAdapter.notifyDataSetChanged();
+
+                listener.onGetConversationsSuccess(conversations,isScrolling);
+
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                // Hanlde failure
+                listener.onGetConversationsError(e);
+            }
+        });
+
+    }
 
 }

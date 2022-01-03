@@ -82,6 +82,10 @@ public class CallingActivity extends AppCompatActivity implements CallStatus, Li
 
         setCalling();
         callManager = CallManager.getInstance();
+        cancel_call.setOnClickListener(view->{
+            ApiCalls.rejectCall(CallingActivity.this, this, call_sessionId_);
+
+        });
 
 
     }
@@ -142,12 +146,14 @@ public class CallingActivity extends AppCompatActivity implements CallStatus, Li
             public void onSuccess(Call call) {
                 call_sessionId_ = call.getSessionId();
                 call_controls.setVisibility(View.VISIBLE);
+                Log.e("sasadddcsdcdsc", "Call initialization : " );
+
             }
 
             @Override
             public void onError(CometChatException e) {
 
-                Log.d(TAG, "Call initialization failed with exception: " + e.getMessage());
+                Log.e("sasadddcsdcdsc", "Call initialization failed with exception: " + e.getMessage());
 
             }
         });
@@ -175,7 +181,7 @@ public class CallingActivity extends AppCompatActivity implements CallStatus, Li
     @Override
     protected void onPause() {
         super.onPause();
-        CometChat.removeMessageListener(sessionId);
+        CometChat.removeCallListener(sessionId);
 
 
     }
@@ -250,6 +256,7 @@ public class CallingActivity extends AppCompatActivity implements CallStatus, Li
         });
 
     }
+
 
     public void camOff(View view) {
         callManager.pauseVideo(true);
