@@ -83,6 +83,16 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="10dp"
                     android:src="@drawable/ic_baseline_call_24" />
+                <ImageView
+                    android:id="@+id/more"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:onClick="moreOption"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_more_menu" />
+
+
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 

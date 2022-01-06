@@ -27,10 +27,33 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.UserDetailActivity"
+            android:theme="@style/AppTheme2"
+            android:exported="true" >
+
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+
+        </activity>
+        <activity
+            android:name=".activities.BlockedUserActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.OnlineUsersActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.UpdateProfileActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.ContactImportingAndProcessingActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ContactsActivity"
             android:exported="true"
@@ -57,7 +80,6 @@
             android:name=".activities.ChatActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"

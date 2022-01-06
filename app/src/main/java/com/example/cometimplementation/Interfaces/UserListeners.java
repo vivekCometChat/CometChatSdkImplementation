@@ -1,13 +1,10 @@
 package com.example.cometimplementation.Interfaces;
 
 import com.cometchat.pro.exceptions.CometChatException;
-import com.cometchat.pro.models.BaseMessage;
+import com.cometchat.pro.models.User;
 
-import java.util.List;
+public interface UserListeners {
 
-public interface CallBackListener {
-
-    void onSuccess(List<BaseMessage> list);
+    void onSuccess(User user);
     void onError(CometChatException e);
-
 }

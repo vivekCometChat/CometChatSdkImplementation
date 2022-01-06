@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cometchat.pro.models.Conversation;
+import com.cometchat.pro.models.TextMessage;
 import com.cometchat.pro.models.User;
 import com.example.cometimplementation.R;
 import com.example.cometimplementation.activities.ChatActivity;
@@ -79,7 +80,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 holder.last_message.setVisibility(View.VISIBLE);
                 holder.img_message.setVisibility(View.GONE);
                 holder.calls.setVisibility(View.GONE);
-                holder.last_message.setText(conversation.getLastMessage().getRawMessage().getJSONObject("data").getString("text"));
+                TextMessage textMessage = (TextMessage) conversation.getLastMessage();
+                if (textMessage.getText() == null)
+                    holder.last_message.setText("this message was deleted");
+                else
+                    holder.last_message.setText(textMessage.getText());
+
             } else if (conversation.getLastMessage().getType().equals("image")) {
                 holder.last_message.setVisibility(View.GONE);
                 holder.img_message.setVisibility(View.VISIBLE);
@@ -102,23 +108,24 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             }
             Log.d("check_type", "onBindViewHolder: " + conversation.getLastMessage().getType());
             holder.itemView.setOnClickListener(view -> {
-                    Intent i = new Intent(context, ChatActivity.class);
-                    if (!conversation.getLastMessage().getSender().getUid().equals(SharedPrefData.getUserId(context))) {
-                        i.putExtra("name", conversation.getLastMessage().getSender().getName());
-                        i.putExtra("uid", conversation.getLastMessage().getSender().getUid());
-                        i.putExtra("img_url", conversation.getLastMessage().getSender().getAvatar());
-                    } else {
-                        i.putExtra("name", receiverUser.getName());
-                        i.putExtra("uid", receiverUser.getUid());
-                        i.putExtra("img_url",receiverUser.getAvatar());
-                    }
-                    holder.itemView.getContext().startActivity(i);
+                Intent i = new Intent(context, ChatActivity.class);
+                if (!conversation.getLastMessage().getSender().getUid().equals(SharedPrefData.getUserId(context))) {
+                    i.putExtra("name", conversation.getLastMessage().getSender().getName());
+                    i.putExtra("uid", conversation.getLastMessage().getSender().getUid());
+                    i.putExtra("img_url", conversation.getLastMessage().getSender().getAvatar());
+                } else {
+                    i.putExtra("name", receiverUser.getName());
+                    i.putExtra("uid", receiverUser.getUid());
+                    i.putExtra("img_url", receiverUser.getAvatar());
+                }
+                holder.itemView.getContext().startActivity(i);
 
             });
 
             holder.time.setText(Utilities.convertMillisToTime(conversation.getLastMessage().getDeliveredAt()));
 
         } catch (Exception e) {
+            e.printStackTrace();
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 

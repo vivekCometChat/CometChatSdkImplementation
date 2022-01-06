@@ -1,17 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: com.facebook.react:react-native-background-timer:2.4.0-cometchat-7346414@aar">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-3/355c67e31ecaf9cb91113fe56fec823a/transformed/jetified-react-native-background-timer-2.4.0-cometchat-7346414/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/355c67e31ecaf9cb91113fe56fec823a/transformed/jetified-react-native-background-timer-2.4.0-cometchat-7346414/res" />
-      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/355c67e31ecaf9cb91113fe56fec823a/transformed/jetified-react-native-background-timer-2.4.0-cometchat-7346414/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/355c67e31ecaf9cb91113fe56fec823a/transformed/jetified-react-native-background-timer-2.4.0-cometchat-7346414/res" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/bf5554c2f665e757ccf0e78a63f07c5e/transformed/jetified-react-native-background-timer-2.4.0-cometchat-7346414/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bf5554c2f665e757ccf0e78a63f07c5e/transformed/jetified-react-native-background-timer-2.4.0-cometchat-7346414/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bf5554c2f665e757ccf0e78a63f07c5e/transformed/jetified-react-native-background-timer-2.4.0-cometchat-7346414/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/bf5554c2f665e757ccf0e78a63f07c5e/transformed/jetified-react-native-background-timer-2.4.0-cometchat-7346414/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.facebook.react/react-native-background-timer/2.4.0-cometchat-7346414/71b943beb97f643eb4d25bd1d4e186d2f9bed97/react-native-background-timer-2.4.0-cometchat-7346414-sources.jar!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.react/react-native-background-timer/2.4.0-cometchat-7346414/71b943beb97f643eb4d25bd1d4e186d2f9bed97/react-native-background-timer-2.4.0-cometchat-7346414-sources.jar!/" />
     </SOURCES>
   </library>

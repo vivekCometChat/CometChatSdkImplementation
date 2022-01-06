@@ -1,19 +1,24 @@
 package com.example.cometimplementation.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.CometChat;
@@ -27,14 +32,19 @@ import com.cometchat.pro.models.CustomMessage;
 import com.cometchat.pro.models.MediaMessage;
 import com.cometchat.pro.models.TextMessage;
 import com.cometchat.pro.models.TypingIndicator;
+import com.cometchat.pro.models.User;
 import com.example.cometimplementation.Interfaces.CallBackUnreadMessageCount;
 import com.example.cometimplementation.Interfaces.ConversationsListener;
+import com.example.cometimplementation.Interfaces.DeleteConversationCallBack;
 import com.example.cometimplementation.R;
+import com.example.cometimplementation.activities.BlockedUserActivity;
 import com.example.cometimplementation.adapter.ConversationAdapter;
 import com.example.cometimplementation.adapter.RecyclerAdapter;
 import com.example.cometimplementation.models.UserPojo;
 import com.example.cometimplementation.utilities.ApiCalls;
+import com.example.cometimplementation.utilities.SharedPrefData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +52,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class RecentChatFragment extends Fragment implements CallBackUnreadMessageCount, ConversationsListener {
+public class RecentChatFragment extends Fragment implements CallBackUnreadMessageCount, ConversationsListener, DeleteConversationCallBack {
     private List<Conversation> conversationList = new ArrayList<>();
     private RecyclerView user_conversation_recyclerView;
     private ConversationAdapter recyclerAdapter;
@@ -52,26 +62,66 @@ public class RecentChatFragment extends Fragment implements CallBackUnreadMessag
 
     LinearLayoutManager linearLayoutManager;
     boolean isScrolling = false;
+    View v;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recent_chat, container, false);
-
+        v = view;
         Log.d("hey_check_lifecycle", "onCreateView: ");
 
         initViews(view);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(user_conversation_recyclerView);
+        setHasOptionsMenu(true);
 
         return view;
     }
 
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            int position = viewHolder.getAdapterPosition();
+            Conversation conversation = conversationList.get(position);
+            User receiverUser = (User) conversation.getLastMessage().getReceiver();
+            if (!conversation.getLastMessage().getSender().getUid().equals(SharedPrefData.getUserId(getContext()))) {
+                deleteConversation(conversation.getLastMessage().getSender().getName(), conversation.getLastMessage().getSender().getUid(), position);
+            } else {
+                deleteConversation(receiverUser.getName(), receiverUser.getUid(), position);
+            }
+        }
+
+    };
+
+    @SuppressLint("ResourceAsColor")
+    private void deleteConversation(String name, String uid, int position) {
+        Snackbar snackbar = Snackbar.make(v, "Are you sure you want to Delete Conversation with " + name, Snackbar.LENGTH_LONG);
+        snackbar.setDuration(4000);
+        snackbar.setAction("Delete", view -> {
+            ApiCalls.deleteConversationWithUser(getContext(), uid, this, position);
+
+        });
+        recyclerAdapter.notifyDataSetChanged();
+        snackbar.show();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.action_bar_profile_menu, menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     @Override
     public void onResume() {
-//        if(conversationList.size()<1){
-//            fetchData(false);
-//        }
 
-        Log.d("hey_check_lifecycle", "onResume: ");
         super.onResume();
         CometChat.addMessageListener(listenerID, new CometChat.MessageListener() {
             @Override
@@ -128,10 +178,7 @@ public class RecentChatFragment extends Fragment implements CallBackUnreadMessag
         user_conversation_recyclerView = view.findViewById(R.id.recyclerView);
         message = view.findViewById(R.id.message);
         linearLayoutManager = new LinearLayoutManager(getContext());
-//        conversationsRequest = new ConversationsRequest.ConversationsRequestBuilder()
-//                .setLimit(10)
-//                .setConversationType(CometChatConstants.CONVERSATION_TYPE_USER)
-//                .build();
+
         user_conversation_recyclerView.addOnScrollListener(onScrollListener);
         setUsersRecycler();
 
@@ -166,13 +213,6 @@ public class RecentChatFragment extends Fragment implements CallBackUnreadMessag
         ApiCalls.getConversations(getContext(), conversationsRequest, this, b);
     }
 
-    private void fetchDataOnStart(boolean b) {
-       ConversationsRequest conversationsRequest = new ConversationsRequest.ConversationsRequestBuilder()
-                .setLimit(10)
-                .setConversationType(CometChatConstants.CONVERSATION_TYPE_USER)
-                .build();
-        ApiCalls.getConversations(getContext(), conversationsRequest, this, b);
-    }
 
     private void setUsersRecycler() {
 
@@ -192,6 +232,7 @@ public class RecentChatFragment extends Fragment implements CallBackUnreadMessag
 
     @Override
     public void unreadMessageCountSuccess(Conversation conversation) {
+
         conversationList.set(conversationList.indexOf(conversation), conversation);
         recyclerAdapter.notifyItemChanged(conversationList.indexOf(conversation));
     }
@@ -214,5 +255,22 @@ public class RecentChatFragment extends Fragment implements CallBackUnreadMessag
     @Override
     public void onGetConversationsError(CometChatException e) {
 
+    }
+
+    @Override
+    public void onConversationDeleteSuccess(String s, int position) {
+
+        conversationList.remove(position);
+        recyclerAdapter.notifyItemRemoved(position);
+        Snackbar snackbar = Snackbar.make(v, "Conversation Deleted Successfully" , Snackbar.LENGTH_LONG);
+        snackbar.setDuration(4000);
+        snackbar.show();
+
+
+    }
+
+    @Override
+    public void onConversationDeleteError(CometChatException e, int position) {
+        recyclerAdapter.notifyDataSetChanged();
     }
 }

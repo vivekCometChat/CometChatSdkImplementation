@@ -50,6 +50,12 @@ public class ChattingUsersFragment extends Fragment {
         recyclerAdapter = new RecyclerAdapter(getActivity(), userPojoList);
         recyclerView.setAdapter(recyclerAdapter);
 
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         if(SharedPrefData.getCommonUser(getContext())!=null){
             userPojoList.addAll(SharedPrefData.getCommonUser(getContext()));
             recyclerAdapter.notifyDataSetChanged();
@@ -75,15 +81,15 @@ public class ChattingUsersFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(SharedPrefData.getCommonUser(getContext())!=null){
-            userPojoList.clear();
-            userPojoList.addAll(SharedPrefData.getCommonUser(getContext()));
-            recyclerAdapter.notifyDataSetChanged();
-        }else{
-            recyclerView.setVisibility(View.GONE);
-            message.setVisibility(View.VISIBLE);
-            message.setText("No User Found");
-        }
+//        if(SharedPrefData.getCommonUser(getContext())!=null){
+//            userPojoList.clear();
+//            userPojoList.addAll(SharedPrefData.getCommonUser(getContext()));
+//            recyclerAdapter.notifyDataSetChanged();
+//        }else{
+//            recyclerView.setVisibility(View.GONE);
+//            message.setVisibility(View.VISIBLE);
+//            message.setText("No User Found");
+//        }
 
     }
 }

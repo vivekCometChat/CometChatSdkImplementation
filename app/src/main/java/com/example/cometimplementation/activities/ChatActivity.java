@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,15 +22,19 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cometchat.pro.constants.CometChatConstants;
-import com.cometchat.pro.core.Call;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.core.MessagesRequest;
 import com.cometchat.pro.exceptions.CometChatException;
@@ -36,14 +43,12 @@ import com.cometchat.pro.models.CustomMessage;
 import com.cometchat.pro.models.MediaMessage;
 import com.cometchat.pro.models.TextMessage;
 import com.cometchat.pro.models.TypingIndicator;
-import com.cometchat.pro.models.User;
-import com.example.cometimplementation.Interfaces.CallBackListener;
-import com.example.cometimplementation.Interfaces.Listeners;
+import com.example.cometimplementation.Interfaces.BlockUnBlockUserCallBackListener;
+import com.example.cometimplementation.Interfaces.CallBackMessageListener;
 import com.example.cometimplementation.Interfaces.MessageListiners;
 import com.example.cometimplementation.R;
 import com.example.cometimplementation.adapter.ChatAdapter;
 import com.example.cometimplementation.utilities.ApiCalls;
-import com.example.cometimplementation.utilities.SharedPrefData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -57,16 +62,17 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.File;
-import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatActivity extends AppCompatActivity implements View.OnClickListener, CallBackListener, MessageListiners {
+public class ChatActivity extends AppCompatActivity implements View.OnClickListener, MessageListiners, CallBackMessageListener, BlockUnBlockUserCallBackListener {
 
     private static final String TAG = "check_call";
+    private LinearLayout linear_lay;
     private String receiverUid = "", receiverImg = "", receiverName = "";
     private CircleImageView profile_img;
     private TextView name, indicator;
@@ -88,6 +94,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     LinearLayoutManager linearLayoutManager;
     boolean isScrolling = false;
 
+    int reply_message_id = 0;
+    boolean isReply = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +107,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         recycler_chat.addOnScrollListener(onScrollListener);
 
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recycler_chat);
+
+
     }
 
     private void initView() {
@@ -107,11 +120,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         linearLayoutManager = new LinearLayoutManager(this);
         messagesRequest = new MessagesRequest.MessagesRequestBuilder()
-                .setLimit(30)
+                .setLimit(50)
                 .setUID(receiverUid)
                 .build();
 
         profile_img = findViewById(R.id.profile_img);
+        linear_lay = findViewById(R.id.linear_lay);
         indicator = findViewById(R.id.indicator);
         name = findViewById(R.id.name);
         call = findViewById(R.id.call);
@@ -124,6 +138,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         send.setOnClickListener(this);
         gallery.setOnClickListener(this);
         call.setOnClickListener(this);
+        linear_lay.setOnClickListener(this);
         name.setText(receiverName);
         Picasso.get().load(receiverImg).into(profile_img);
         setChatRecyclerView();
@@ -147,7 +162,45 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 handler.postDelayed(input_finish_checker, delay);
             }
         });
+    }
 
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            Toast.makeText(ChatActivity.this, "on Move", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            int position = viewHolder.getAdapterPosition();
+
+            if (swipeDir == 8) {
+                chatAdapter.notifyDataSetChanged();
+                isReply = true;
+                reply_message_id = messages.get(position).getId();
+                if (messages.get(position) instanceof TextMessage) {
+                    TextMessage textMessage = (TextMessage) messages.get(position);
+                    input_message.clearComposingText();
+                    input_message.setText("reply To :\n" + textMessage.getText() + "\n\nYour Reply here :\n");
+                }
+
+//                Toast.makeText(ChatActivity.this, "Reply To " + messages.get(position).getId(), Toast.LENGTH_SHORT).show();
+
+            } else if (swipeDir == 4) {
+                deleteMessage(messages.get(position).getId());
+                Toast.makeText(ChatActivity.this, "on Deleted" + messages.get(position).getId(), Toast.LENGTH_SHORT).show();
+//                messages.remove(position);
+//                chatAdapter.notifyDataSetChanged();
+            }
+
+        }
+
+    };
+
+    private void deleteMessage(int id) {
+        ApiCalls.deleteMessage(this, id, this);
 
     }
 
@@ -168,7 +221,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             super.onScrolled(recyclerView, dx, dy);
 
             if (!recyclerView.canScrollVertically(-1)) {
-                fetchData();
+                fetchData(true);
             }
 
 
@@ -189,12 +242,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         recycler_chat.setLayoutManager(linearLayoutManager);
         chatAdapter = new ChatAdapter(this, messages);
         recycler_chat.setAdapter(chatAdapter);
-        fetchData();
+        fetchData(false);
 
     }
 
-    private void fetchData() {
-        ApiCalls.fetchPreviousMessages(this, messagesRequest, isScrolling, this);
+    private void fetchData(boolean isScroll) {
+        ApiCalls.fetchPreviousMessages(this, messagesRequest, isScroll, this);
 
     }
 
@@ -213,6 +266,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.call:
                 initiateCall();
+                break;
+            case R.id.linear_lay:
+                Intent i=new Intent(this,UserDetailActivity.class);
+                i.putExtra("uid",receiverUid);
+                startActivity(i);
                 break;
             case R.id.input_message:
                 if (messages.size() > 0)
@@ -293,10 +351,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void sendMessage() {
-
-
         if (!input_message.getText().toString().trim().isEmpty()) {
-            sendingTextMessage(input_message.getText().toString().trim());
+            ApiCalls.sendTextMessage(this, reply_message_id, isReply, input_message.getText().toString().trim(), receiverUid, this, "text");
         } else {
             if (resultUri == null) {
                 input_message.setError("Please write some Message");
@@ -305,56 +361,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (resultUri != null) {
             Log.d("see_result_uri", "sendMessage: " + resultUri);
-            sendImageMessage(getPath(resultUri));
-
+            ApiCalls.sendMediaMessage(this, reply_message_id, isReply, "", receiverUid, this, "media", getPath(resultUri));
         }
-
-    }
-
-    private void sendImageMessage(String image_uri) {
-        MediaMessage mediaMessage = new MediaMessage(receiverUid, new File(image_uri), CometChatConstants.MESSAGE_TYPE_IMAGE, CometChatConstants.RECEIVER_TYPE_USER);
-
-        CometChat.sendMediaMessage(mediaMessage, new CometChat.CallbackListener<MediaMessage>() {
-            @Override
-            public void onSuccess(MediaMessage mediaMessage) {
-                Log.d("check", "Media message sent successfully: " + mediaMessage.toString());
-                resultUri = null;
-                image.setVisibility(View.GONE);
-                messages.add(mediaMessage);
-                chatAdapter.notifyDataSetChanged();
-                linearLayoutManager.scrollToPosition(messages.size() - 1);
-
-            }
-
-            @Override
-            public void onError(CometChatException e) {
-                Log.d("check", "Media message sending failed with exception: " + e.getMessage());
-            }
-        });
-    }
-
-    private void sendingTextMessage(String message) {
-        TextMessage textMessage = new TextMessage(receiverUid, message, CometChatConstants.RECEIVER_TYPE_USER);
-
-        CometChat.sendMessage(textMessage, new CometChat.CallbackListener<TextMessage>() {
-            @Override
-            public void onSuccess(TextMessage textMessage) {
-                CometChat.endTyping(typingIndicator);
-                Log.d("check", "Message sent successfully: " + textMessage.toString());
-                input_message.getText().clear();
-//                hideKeyBoard();
-                messages.add(textMessage);
-                chatAdapter.notifyDataSetChanged();
-                linearLayoutManager.scrollToPosition(messages.size() - 1);
-
-            }
-
-            @Override
-            public void onError(CometChatException e) {
-                Log.d("check", "Message sending failed with exception: " + e.getMessage());
-
-            }
-        });
 
     }
 
@@ -398,6 +406,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 indicator.setVisibility(View.GONE);
             }
 
+            @Override
+            public void onMessageDeleted(BaseMessage message) {
+//                updateViewForMessageDeleted(message);
+                Log.d(TAG, "Message Edited");
+            }
         });
 
 
@@ -432,33 +445,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Override
-    public void onSuccess(List<BaseMessage> list) {
-
-        for (BaseMessage message : list) {
-            if (message instanceof TextMessage) {
-                messages.add(message);
-                Log.d("", "Text message received successfully: " + ((TextMessage) message).toString());
-            } else if (message instanceof MediaMessage) {
-                messages.add(message);
-                Log.d("", "Media message received successfully: " + ((MediaMessage) message).toString());
-            }
-        }
-        chatAdapter.notifyDataSetChanged();
-        if (messages.size() > 0)
-            linearLayoutManager.scrollToPosition(messages.size() - 1);
-
-
-    }
-
-    @Override
-    public void onError(CometChatException e) {
-
-    }
-
-    @Override
     public void onMessageReceivedSuccess(List<BaseMessage> list, boolean isScrolling) {
 
         if (!isScrolling) {
+//            messages.addAll(list);
             for (BaseMessage message : list) {
                 if (message instanceof TextMessage) {
                     messages.add(message);
@@ -472,6 +462,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             if (messages.size() > 0)
                 linearLayoutManager.scrollToPosition(messages.size() - 1);
         } else {
+//            messages.addAll(0,list);
             for (BaseMessage message : list) {
                 if (message instanceof TextMessage) {
                     messages.add(0, message);
@@ -489,5 +480,122 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onMessageReceivedError(CometChatException e) {
 
+    }
+
+    @Override
+    public void onMessageSuccess(BaseMessage baseMessage) {
+        if (baseMessage instanceof TextMessage) {
+            reply_message_id = 0;
+            isReply = false;
+            TextMessage textMessage = (TextMessage) baseMessage;
+            CometChat.endTyping(typingIndicator);
+            Log.d("check", "Message sent successfully: " + textMessage.toString() + textMessage.getDeletedAt());
+            input_message.getText().clear();
+            messages.add(textMessage);
+            chatAdapter.notifyDataSetChanged();
+            linearLayoutManager.scrollToPosition(messages.size() - 1);
+        } else if (baseMessage instanceof MediaMessage) {
+            reply_message_id = 0;
+            isReply = false;
+            MediaMessage mediaMessage = (MediaMessage) baseMessage;
+            Log.d("check", "Media message sent successfully: " + mediaMessage.toString());
+            resultUri = null;
+            image.setVisibility(View.GONE);
+            messages.add(mediaMessage);
+            chatAdapter.notifyDataSetChanged();
+            linearLayoutManager.scrollToPosition(messages.size() - 1);
+        }
+
+    }
+
+    @Override
+    public void onMessageFailure(CometChatException e) {
+        chatAdapter.notifyDataSetChanged();
+        Log.e("get_deleted_error", "onMessageFailure: " + e.getMessage());
+    }
+
+    @Override
+    public void onMessageDeleted(BaseMessage baseMessage) {
+        updateViewForMessageDeleted(baseMessage);
+
+    }
+
+    private void updateViewForMessageDeleted(BaseMessage baseMessage) {
+        if (baseMessage instanceof TextMessage) {
+            TextMessage textMessage = (TextMessage) baseMessage;
+
+            if (baseMessage.getDeletedAt() != 0) {
+                int pos = messages.indexOf(textMessage);
+                Log.d("get_deleted_error", "onMessageSuccess: " + pos);
+                messages.add(pos, textMessage);
+                chatAdapter.notifyItemChanged(pos);
+
+
+            }
+        } else if (baseMessage instanceof MediaMessage) {
+            MediaMessage mediaMessage = (MediaMessage) baseMessage;
+            if (baseMessage.getDeletedAt() != 0) {
+                int pos = messages.indexOf(mediaMessage);
+                Log.d("get_deleted_error", "onMessageSuccess: " + pos);
+                messages.add(pos, mediaMessage);
+                chatAdapter.notifyItemChanged(pos);
+
+            }
+        }
+        chatAdapter.notifyDataSetChanged();
+
+    }
+
+    @SuppressLint("RestrictedApi")
+    public void moreOption(View view) {
+
+        @SuppressLint("RestrictedApi") MenuBuilder menuBuilder = new MenuBuilder(this);
+        MenuInflater inflater = new MenuInflater(this);
+        inflater.inflate(R.menu.pop_up_menu, menuBuilder);
+        MenuPopupHelper menuPopupHelper = new MenuPopupHelper(this, menuBuilder, view);
+        menuPopupHelper.setForceShowIcon(true);
+        menuBuilder.setCallback(new MenuBuilder.Callback() {
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuBuilder menu, @NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.block:
+                        blockUser();
+                        return true;
+                    case R.id.report:
+                        Toast.makeText(ChatActivity.this, "coming soon", Toast.LENGTH_SHORT).show();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public void onMenuModeChange(@NonNull MenuBuilder menu) {
+
+            }
+        });
+
+        menuPopupHelper.setGravity(Gravity.END);
+        menuPopupHelper.show();
+
+    }
+
+    private void blockUser() {
+
+        ApiCalls.blockUser(this, Arrays.asList(receiverUid), this);
+
+    }
+
+    @Override
+    public void onUserBlockUnBlockSuccess(HashMap<String, String> resultMap) {
+
+        finish();
+        Toast.makeText(this, "User Blocked Successfully", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onUserBlockUnBlockError(CometChatException e) {
+        e.printStackTrace();
     }
 }

@@ -16,30 +16,43 @@
         <entry key="..\:/cometchat app/CometChatSdkImplementation/app/src/main/res/menu/action_bar_menu.xml" value="0.3625" />
         <entry key="app/src/main/res/drawable/bottom_nav_item_click.xml" value="0.20615384615384616" />
         <entry key="app/src/main/res/drawable/bottom_navigation_bg.xml" value="0.209375" />
+        <entry key="app/src/main/res/drawable/circle_shape.xml" value="0.190625" />
         <entry key="app/src/main/res/drawable/circular_grey_border_solid.xml" value="0.15260416666666668" />
         <entry key="app/src/main/res/drawable/dot_bg.xml" value="0.20615384615384616" />
+        <entry key="app/src/main/res/drawable/ic_person.xml" value="0.18958333333333333" />
         <entry key="app/src/main/res/drawable/indicator_background.xml" value="0.1515625" />
         <entry key="app/src/main/res/drawable/receivers_background.xml" value="0.15260416666666668" />
+        <entry key="app/src/main/res/drawable/shadow_bg.xml" value="0.190625" />
+        <entry key="app/src/main/res/layout/activity_blocked_user.xml" value="0.17447916666666666" />
         <entry key="app/src/main/res/layout/activity_call_reciver.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_calling.xml" value="0.18" />
         <entry key="app/src/main/res/layout/activity_chat.xml" value="0.34444444444444444" />
         <entry key="app/src/main/res/layout/activity_contacts.xml" value="0.13645833333333332" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_online_users.xml" value="0.17447916666666666" />
+        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_update_profile.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/activity_user_detail.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/bottom_dialog_sheet.xml" value="0.33" />
         <entry key="app/src/main/res/layout/calling_request_alert_layout.xml" value="0.12371134020618557" />
         <entry key="app/src/main/res/layout/contact_recycler_lay.xml" value="0.13677536231884058" />
         <entry key="app/src/main/res/layout/fragment_chatting_users.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/fragment_contact.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_recent_chat.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/message_layout.xml" value="0.21" />
+        <entry key="app/src/main/res/layout/online_offline_users_row.xml" value="0.17447916666666666" />
         <entry key="app/src/main/res/layout/recent_chat.xml" value="0.1359375" />
         <entry key="app/src/main/res/layout/recent_chat_row.xml" value="0.25" />
         <entry key="app/src/main/res/layout/recycler_lay.xml" value="0.13677536231884058" />
+        <entry key="app/src/main/res/menu/action_bar_profile_menu.xml" value="0.33" />
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.19322916666666667" />
+        <entry key="app/src/main/res/menu/pop_up_menu.xml" value="0.17447916666666666" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.121875" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

@@ -1,5 +1,6 @@
 package com.example.cometimplementation.utilities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -82,6 +83,23 @@ public class SharedPrefData {
         Type type = new TypeToken<List<UserPojo>>() {
         }.getType();
         return gson.fromJson(jsonString, type);
+    }
+
+    public static void clearAllPrefData(Context context){
+
+        SharedPreferences preferences =context.getSharedPreferences(login,Context.MODE_PRIVATE);
+        SharedPreferences preferences2 =context.getSharedPreferences(contacts,Context.MODE_PRIVATE);
+        SharedPreferences preferences3 =context.getSharedPreferences(users,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor2 = preferences2.edit();
+        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor3 = preferences3.edit();
+        editor.clear();
+        editor2.clear();
+        editor3.clear();
+        editor.apply();
+        editor2.apply();
+        editor3.apply();
+
     }
 
 
