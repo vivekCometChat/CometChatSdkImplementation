@@ -11,38 +11,193 @@
         android:id="@+id/message_holder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autoLink="web"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:autoLink="web"
+            android:padding="15dp"
+            android:text="h"
             android:textAlignment="textStart"
-            android:text="hii"
             android:textColor="@color/black" />
 
         <ImageView
             android:id="@+id/image"
-            android:gravity="center"
-            android:layout_margin="10dp"
-            android:scaleType="centerInside"
             android:layout_width="wrap_content"
-            android:layout_height="300dp" />
+            android:layout_height="300dp"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:scaleType="centerInside" />
 
-        <TextView
-            android:id="@+id/time"
+        <LinearLayout
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="11:20 PM"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:textColor="@android:color/white"
-            android:textSize="11sp" />
+            android:layout_marginEnd="5dp"
+            android:orientation="horizontal">
 
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:text="11:20 PM"
+                android:textColor="@android:color/white"
+                android:textSize="11sp" />
+
+            <ImageView
+                android:id="@+id/delivered"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_check"
+                android:visibility="gone"
+                app:tint="@color/black" />
+
+            <ImageView
+                android:id="@+id/seen"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginStart="-10dp"
+                android:src="@drawable/ic_check"
+                android:translationZ="1dp"
+                android:visibility="gone"
+                app:tint="@color/black" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/my_side"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/time_sender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginEnd="10dp"
+            android:text="9:10 AM"
+            android:textColor="@color/dark_grey" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_my_side"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/button_bg"
+                android:backgroundTint="@color/app_theme"
+                android:padding="15dp"
+                android:text="dssdsfsfadaddadawdwdadwdawdwaddadawdadadwa"
+                android:textColor="@color/black" />
+
+            <ImageView
+                android:id="@+id/image_my_side"
+                android:layout_width="250dp"
+                android:layout_height="300dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:background="@drawable/button_bg"
+                android:backgroundTint="@color/app_theme"
+                android:scaleType="centerInside"
+                android:src="@drawable/img_person_test"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/there_side"
+        >
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="50dp"
+            android:id="@+id/receiver_img"
+            android:layout_height="50dp"
+            android:layout_marginBottom="-25dp"
+            android:background="@color/black"
+            android:src="@drawable/img_person_test"
+            android:translationZ="1dp"
+            app:shapeAppearance="@style/roundedImageViewRounded" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="55dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/text_there_side"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:background="@drawable/button_bg"
+                    android:backgroundTint="@color/grey"
+                    android:maxWidth="230dp"
+                    android:padding="15dp"
+                    android:text="dwewweddwdedwdwdwdwdewdewdewdedasxaxaxaewdewd"
+                    android:textColor="@color/dark_grey" />
+
+                <ImageView
+                    android:id="@+id/image_there_side"
+                    android:layout_width="250dp"
+                    android:layout_height="300dp"
+                    android:layout_gravity="start"
+                    android:layout_marginTop="10dp"
+                    android:padding="10dp"
+                    android:background="@drawable/button_bg"
+                    android:backgroundTint="@color/app_theme"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/img_person_test"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/time_receiver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="9:10 AM"
+                android:textColor="@color/dark_grey" />
+
+
+        </LinearLayout>
 
     </LinearLayout>
 

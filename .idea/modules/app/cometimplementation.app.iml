@@ -87,6 +87,7 @@
     <orderEntry type="library" name="Gradle: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" name="Gradle: com.karumi:dexter:6.2.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.google.android.material:material:1.4.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.jgabrielfreitas:BlurImageView:1.0.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.theartofdev.edmodo:android-image-cropper:2.8.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.cometchat:pro-android-calls-sdk:2.1.2-beta2@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.facebook.react:react-native-background-timer:2.4.0-cometchat-7346414@aar" level="project" />

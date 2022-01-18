@@ -18,34 +18,38 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
+            <com.jgabrielfreitas.core.BlurImageView
                 android:id="@+id/persons_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/black"
-                android:src="@drawable/img_person_test" />
+                android:scaleType="fitXY" />
 
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:visibility="visible">
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="20dp"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_arrow_back"
-                    android:visibility="gone"
-                    app:tint="@color/black" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/receiver_img_view"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="70dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:scaleType="fitXY"
+                    app:shapeAppearanceOverlay="@style/roundedImageViewRounded" />
 
                 <TextView
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/receiver_img_view"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="60dp"
                     android:padding="5dp"
                     android:text="vivek Prajapati "
                     android:textAlignment="center"
@@ -54,8 +58,11 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/calling"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/name"
+                    android:layout_marginTop="20dp"
                     android:text="Calling... "
                     android:textAlignment="center"
                     android:textColor="@color/white"
@@ -63,144 +70,90 @@
                     android:textStyle="bold" />
 
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/call_initiated"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="50dp"
+                    android:orientation="horizontal"
+                    android:padding="30dp"
+                    android:visibility="gone">
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="bottom"-->
-<!--                android:layout_marginBottom="50dp"-->
-<!--                android:gravity="center_vertical">-->
+                    <ImageView
+                        android:id="@+id/end_call"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/dot_bg"
+                        android:backgroundTint="@color/red"
+                        android:onClick="endCall"
+                        android:padding="15dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/cancel_call"
+                        app:tint="@color/white" />
 
-<!--                <Space-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1" />-->
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
 
-<!--                <ImageView-->
-<!--                    android:layout_width="50dp"-->
-<!--                    android:layout_height="50dp"-->
-<!--                    android:background="@drawable/circular_grey_border_solid"-->
-<!--                    android:padding="10dp"-->
-<!--                    android:src="@drawable/chat"-->
-<!--                    app:tint="@color/black" />-->
+                    <ImageView
+                        android:id="@+id/cancel_sound"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/dot_bg"
+                        android:backgroundTint="@color/app_theme"
+                        android:onClick="offSpeaker"
+                        android:padding="15dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/volume"
+                        app:tint="@color/white" />
 
-<!--                <Space-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1" />-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="50dp"-->
-<!--                    android:layout_height="50dp"-->
-<!--                    android:background="@drawable/circular_grey_border_solid"-->
-<!--                    android:padding="10dp"-->
-<!--                    android:src="@drawable/mute"-->
-<!--                    app:tint="@android:color/black" />-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="50dp"-->
-<!--                    android:layout_height="50dp"-->
-<!--                    android:background="@drawable/circular_grey_border_solid"-->
-<!--                    android:padding="10dp"-->
-<!--                    android:rotationY="180"-->
-<!--                    android:src="@drawable/voice_muted"-->
-<!--                    android:visibility="gone"-->
-<!--                    app:tint="@android:color/black" />-->
-
-<!--                <Space-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1" />-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/end_call"-->
-<!--                    android:layout_width="60dp"-->
-<!--                    android:layout_height="60dp"-->
-<!--                    android:background="@drawable/circular_grey_border_solid"-->
-<!--                    android:backgroundTint="@android:color/holo_red_dark"-->
-<!--                    android:padding="10dp"-->
-<!--                    android:src="@drawable/cancel_call"-->
-<!--                    app:tint="@color/white" />-->
-
-<!--                <Space-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1" />-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/off_camera"-->
-<!--                    android:layout_width="50dp"-->
-<!--                    android:layout_height="50dp"-->
-<!--                    android:background="@drawable/circular_grey_border_solid"-->
-<!--                    android:padding="10dp"-->
-<!--                    android:src="@drawable/video"-->
-<!--                    app:tint="@android:color/black" />-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/on_camera"-->
-<!--                    android:layout_width="50dp"-->
-<!--                    android:layout_height="50dp"-->
-<!--                    android:background="@drawable/circular_grey_border_solid"-->
-<!--                    android:padding="10dp"-->
-<!--                    android:src="@drawable/no_video"-->
-<!--                    android:visibility="gone"-->
-<!--                    app:tint="@android:color/black" />-->
-
-<!--                <Space-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1" />-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/off_speaker"-->
-<!--                    android:layout_width="50dp"-->
-<!--                    android:layout_height="50dp"-->
-<!--                    android:background="@drawable/circular_grey_border_solid"-->
-<!--                    android:padding="10dp"-->
-<!--                    android:src="@drawable/volume"-->
-<!--                    app:tint="@android:color/black" />-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/on_speaker"-->
-<!--                    android:layout_width="50dp"-->
-<!--                    android:layout_height="50dp"-->
-<!--                    android:background="@drawable/circular_grey_border_solid"-->
-<!--                    android:padding="10dp"-->
-<!--                    android:src="@drawable/volume_cancel"-->
-<!--                    android:visibility="gone"-->
-<!--                    app:tint="@android:color/black" />-->
-
-<!--                <Space-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1" />-->
+                    <ImageView
+                        android:id="@+id/allow_sound"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/dot_bg"
+                        android:backgroundTint="@color/app_theme"
+                        android:onClick="onSpeaker"
+                        android:padding="15dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/volume_cancel"
+                        android:visibility="gone"
+                        app:tint="@color/white" />
 
 
-<!--            </LinearLayout>-->
+                </LinearLayout>
 
+
+            </RelativeLayout>
 
 
         </FrameLayout>
 
         <RelativeLayout
-            android:layout_above="@id/call_controls"
             android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_above="@id/call_controls">
 
         </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/call_controls"
-            android:visibility="gone"
-            android:padding="10dp"
-            android:background="@android:color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="10dp"
-            android:gravity="center_vertical">
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:visibility="gone">
+
 
             <Space
                 android:layout_width="0dp"
@@ -208,41 +161,29 @@
                 android:layout_weight="1" />
 
             <ImageView
-                android:id="@+id/chat"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:onClick="chat"
-                android:background="@drawable/circular_grey_border_solid"
-                android:padding="10dp"
-                android:src="@drawable/chat"
-                app:tint="@color/black" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:id="@+id/off_speaker"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/dot_bg"
+                android:backgroundTint="@color/app_theme"
+                android:onClick="offSpeaker"
+                android:padding="15dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/volume"
+                app:tint="@color/white" />
 
             <ImageView
-                android:id="@+id/mute"
-                android:layout_width="50dp"
-                android:onClick="mute"
-                android:layout_height="50dp"
-                android:background="@drawable/circular_grey_border_solid"
-                android:padding="10dp"
-                android:src="@drawable/mute"
-                app:tint="@android:color/black" />
-
-            <ImageView
-                android:id="@+id/unmute"
-                android:layout_width="50dp"
-                android:onClick="unMute"
-                android:layout_height="50dp"
-                android:background="@drawable/circular_grey_border_solid"
-                android:padding="10dp"
-                android:rotationY="180"
-                android:src="@drawable/voice_muted"
+                android:id="@+id/on_speaker"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/dot_bg"
+                android:backgroundTint="@color/app_theme"
+                android:onClick="onSpeaker"
+                android:padding="15dp"
+                android:scaleType="fitXY"
                 android:visibility="gone"
-                app:tint="@android:color/black" />
+                android:src="@drawable/volume_cancel"
+                app:tint="@color/white" />
 
             <Space
                 android:layout_width="0dp"
@@ -251,12 +192,13 @@
 
             <ImageView
                 android:id="@+id/cancel_call"
-                android:layout_width="60dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/dot_bg"
+                android:backgroundTint="@color/red"
                 android:onClick="endCall"
-                android:layout_height="60dp"
-                android:background="@drawable/circular_grey_border_solid"
-                android:backgroundTint="@android:color/holo_red_dark"
-                android:padding="10dp"
+                android:padding="15dp"
+                android:scaleType="fitXY"
                 android:src="@drawable/cancel_call"
                 app:tint="@color/white" />
 
@@ -266,51 +208,31 @@
                 android:layout_weight="1" />
 
             <ImageView
-                android:id="@+id/off_camera"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/circular_grey_border_solid"
-                android:onClick="camOff"
-                android:padding="10dp"
-                android:src="@drawable/video"
-                app:tint="@android:color/black" />
+                android:id="@+id/mute"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/dot_bg"
+                android:backgroundTint="@color/grey"
+                android:onClick="mute"
+                android:padding="15dp"
+                android:visibility="visible"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_baseline_mic"
+                app:tint="@color/black" />
 
             <ImageView
-                android:id="@+id/on_camera"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:onClick="onCam"
-                android:background="@drawable/circular_grey_border_solid"
-                android:padding="10dp"
-                android:src="@drawable/no_video"
+                android:id="@+id/unmute"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/dot_bg"
+                android:backgroundTint="@color/grey"
+                android:onClick="unMute"
+                android:padding="15dp"
                 android:visibility="gone"
-                app:tint="@android:color/black" />
+                android:scaleType="fitXY"
+                android:src="@drawable/mute"
+                app:tint="@color/black" />
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:id="@+id/off_speaker"
-                android:layout_width="50dp"
-                android:onClick="offSpeaker"
-                android:layout_height="50dp"
-                android:background="@drawable/circular_grey_border_solid"
-                android:padding="10dp"
-                android:src="@drawable/volume"
-                app:tint="@android:color/black" />
-
-            <ImageView
-                android:id="@+id/on_speaker"
-                android:layout_width="50dp"
-                android:onClick="onSpeaker"
-                android:layout_height="50dp"
-                android:background="@drawable/circular_grey_border_solid"
-                android:padding="10dp"
-                android:src="@drawable/volume_cancel"
-                android:visibility="gone"
-                app:tint="@android:color/black" />
 
             <Space
                 android:layout_width="0dp"

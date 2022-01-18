@@ -31,6 +31,8 @@ import com.cometchat.pro.models.User;
 import com.example.cometimplementation.utilities.ApiCalls;
 import com.example.cometimplementation.Interfaces.CallStatus;
 import com.example.cometimplementation.R;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.jgabrielfreitas.core.BlurImageView;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -43,14 +45,15 @@ import java.util.List;
 public class CallReciverActivity extends AppCompatActivity implements CallStatus, CometChat.OngoingCallListener {
 
     String sender_img = "", name = "", session_id = "";
-    ImageView persons_image, reject_call, accept_call;
+    ImageView reject_call, accept_call;
     TextView caller_name;
     FrameLayout call_notify_container;
     RelativeLayout calling_container;
     LinearLayout call_controls;
-    ImageView chat, mute, unmute, cancel_call, off_camera, on_camera, off_speaker, on_speaker;
+    ImageView chat, mute, unmute, cancel_call,off_speaker, on_speaker;
     CallManager callManager;
-
+    BlurImageView persons_image;
+    ShapeableImageView receiver_img_view;
     Vibrator v;
     Ringtone currentRingtone;
     Uri currentRintoneUri;
@@ -91,8 +94,7 @@ public class CallReciverActivity extends AppCompatActivity implements CallStatus
         mute = findViewById(R.id.mute);
         unmute = findViewById(R.id.unmute);
         cancel_call = findViewById(R.id.cancel_call);
-        off_camera = findViewById(R.id.off_camera);
-        on_camera = findViewById(R.id.on_camera);
+
         off_speaker = findViewById(R.id.off_speaker);
         on_speaker = findViewById(R.id.on_speaker);
 
@@ -101,6 +103,7 @@ public class CallReciverActivity extends AppCompatActivity implements CallStatus
         reject_call = findViewById(R.id.reject_call);
         accept_call = findViewById(R.id.accept_call);
         caller_name = findViewById(R.id.caller_name);
+        receiver_img_view = findViewById(R.id.receiver_img_view);
         calling_container = findViewById(R.id.calling_container);
         call_notify_container = findViewById(R.id.call_notify_container);
         call_controls = findViewById(R.id.call_controls);
@@ -116,6 +119,8 @@ public class CallReciverActivity extends AppCompatActivity implements CallStatus
         callManager = CallManager.getInstance();
         if (!sender_img.isEmpty()) {
             Picasso.get().load(sender_img).error(R.drawable.img_person_test).into(persons_image);
+            persons_image.setBlur(20);
+            Picasso.get().load(sender_img).error(R.drawable.img_person_test).into(receiver_img_view);
         }
 
 
@@ -263,15 +268,13 @@ public class CallReciverActivity extends AppCompatActivity implements CallStatus
 
     public void camOff(View view) {
         callManager.pauseVideo(true);
-        off_camera.setVisibility(View.GONE);
-        on_camera.setVisibility(View.VISIBLE);
+
 
     }
 
     public void onCam(View view) {
         callManager.pauseVideo(false);
-        off_camera.setVisibility(View.VISIBLE);
-        on_camera.setVisibility(View.GONE);
+
 
 
     }

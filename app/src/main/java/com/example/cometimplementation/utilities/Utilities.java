@@ -5,10 +5,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.cometchat.pro.models.User;
 import com.example.cometimplementation.models.UserPojo;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -87,13 +89,17 @@ public class Utilities {
     }
 
     public static String convertMillisToTime(long deliveredAt) {
-
+        Date date = new Date(deliveredAt);
+        Log.e("time_date_see", "convertMillisToTime: " + date);
         SimpleDateFormat myFormat = new SimpleDateFormat("h:mm a");
-        myFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         return myFormat.format(deliveredAt);
 
 
+    }
 
+    public static void showSnackBarMessage(View view, String message) {
+        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
 }

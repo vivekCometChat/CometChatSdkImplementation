@@ -50,7 +50,7 @@ public class ContactImportingAndProcessingActivity extends AppCompatActivity imp
         setContentView(R.layout.activity_contact_importing_and_processing);
 
         initViews();
-        checkPermissions();
+//        checkPermissions();
 
     }
 
@@ -82,7 +82,8 @@ public class ContactImportingAndProcessingActivity extends AppCompatActivity imp
             progress.setProgress(0);
             progress_message.setText("Can't able to Store Contacts");
         }
-        ApiCalls.fetchCometChatUsers(this, this);
+        UsersRequest usersRequest = new UsersRequest.UsersRequestBuilder().setLimit(30).build();
+        ApiCalls.fetchCometChatUsers(this, usersRequest,this);
     }
 
     @SuppressLint("ResourceAsColor")
@@ -108,6 +109,13 @@ public class ContactImportingAndProcessingActivity extends AppCompatActivity imp
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkPermissions();
+
+    }
+
     public void gotoHome(View view) {
         startActivity(new Intent(this, MainActivity.class));
         finish();
@@ -119,16 +127,19 @@ public class ContactImportingAndProcessingActivity extends AppCompatActivity imp
         if (list != null && list.size() > 0 && SharedPrefData.getSaveContacts(this) != null && SharedPrefData.getSaveContacts(this).size() > 0) {
             Utilities.filterUsers(this, list, SharedPrefData.getSaveContacts(this));
 
-            if(SharedPrefData.getCommonUser(this)!=null && SharedPrefData.getCommonUser(this).size()>0){
+            if (SharedPrefData.getCommonUser(this) != null && SharedPrefData.getCommonUser(this).size() > 0) {
                 progress.setProgress(100);
                 progress_message.setText("All set up! Enjoy Chatting");
                 go_next.setEnabled(true);
 
+            }else{
+                progress_message.setText("We didn't able to find common user from your phone book and CometChat, Please invite your friends!");
+
             }
-        }else{
+        } else {
             progress.setProgress(0);
             progress_message.setText("Either you dont have contacts or you have no Comet chat users");
-            Toast.makeText(this,"Either you dont have contacts or you have no Comet chat users",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Either you dont have contacts or you have no Comet chat users", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -137,7 +148,7 @@ public class ContactImportingAndProcessingActivity extends AppCompatActivity imp
     @Override
     public void onError(CometChatException e) {
 
-        Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
 
     }
 }

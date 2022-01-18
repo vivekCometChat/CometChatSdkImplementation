@@ -60,6 +60,7 @@ public class OnlineUserAdapter extends RecyclerView.Adapter<OnlineUserAdapter.my
             i.putExtra("name", user.getName());
             i.putExtra("uid", user.getUid());
             i.putExtra("img_url", user.getAvatar());
+            i.putExtra("isGroup",false);
             holder.itemView.getContext().startActivity(i);
         });
 

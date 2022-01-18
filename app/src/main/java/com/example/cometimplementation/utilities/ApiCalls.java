@@ -14,13 +14,18 @@ import com.cometchat.pro.core.Call;
 import com.cometchat.pro.core.CallSettings;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.core.ConversationsRequest;
+import com.cometchat.pro.core.GroupMembersRequest;
+import com.cometchat.pro.core.GroupsRequest;
 import com.cometchat.pro.core.MessagesRequest;
 import com.cometchat.pro.core.UsersRequest;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.AudioMode;
 import com.cometchat.pro.models.BaseMessage;
 import com.cometchat.pro.models.Conversation;
+import com.cometchat.pro.models.Group;
+import com.cometchat.pro.models.GroupMember;
 import com.cometchat.pro.models.MediaMessage;
+import com.cometchat.pro.models.MessageReceipt;
 import com.cometchat.pro.models.TextMessage;
 import com.cometchat.pro.models.User;
 import com.example.cometimplementation.Interfaces.BlockUnBlockUserCallBackListener;
@@ -29,14 +34,23 @@ import com.example.cometimplementation.Interfaces.CallBackUnreadMessageCount;
 import com.example.cometimplementation.Interfaces.CallStatus;
 import com.example.cometimplementation.Interfaces.ConversationsListener;
 import com.example.cometimplementation.Interfaces.DeleteConversationCallBack;
+import com.example.cometimplementation.Interfaces.FetchGroupCallBack;
+import com.example.cometimplementation.Interfaces.FetchGroupListCallBack;
+import com.example.cometimplementation.Interfaces.FetchGroupMemberList;
 import com.example.cometimplementation.Interfaces.FetchUserCallBack;
 import com.example.cometimplementation.Interfaces.Listeners;
 import com.example.cometimplementation.Interfaces.MessageListiners;
+import com.example.cometimplementation.Interfaces.MessageReadByListCallBack;
+import com.example.cometimplementation.Interfaces.OnGroupCreateCallBackListener;
+import com.example.cometimplementation.Interfaces.OnMembersAddedCallBack;
+import com.example.cometimplementation.Interfaces.SuccessMessageCallBack;
 import com.example.cometimplementation.Interfaces.UserListeners;
 import com.example.cometimplementation.activities.ContactImportingAndProcessingActivity;
 import com.example.cometimplementation.activities.LoginActivity;
 import com.example.cometimplementation.activities.MainActivity;
 import com.example.cometimplementation.activities.ProfileActivity;
+import com.example.cometimplementation.activities.SplashScreen;
+import com.facebook.react.uimanager.events.ContentSizeChangeEvent;
 
 import java.io.File;
 import java.util.HashMap;
@@ -44,17 +58,63 @@ import java.util.List;
 
 public class ApiCalls {
 
-
-    public static void deleteConversationWithUser(Context context, String uid, DeleteConversationCallBack conversationCallBack,int position) {
-        CometChat.deleteConversation(uid, CometChatConstants.RECEIVER_TYPE_USER, new CometChat.CallbackListener<String>() {
+    public static void addMembersInGroup(Context context, String guid, List<GroupMember> members, OnMembersAddedCallBack listener) {
+        CometChat.addMembersToGroup(guid, members, null, new CometChat.CallbackListener<HashMap<String, String>>() {
             @Override
-            public void onSuccess(String s) {
-                conversationCallBack.onConversationDeleteSuccess(s,position);
+            public void onSuccess(HashMap<String, String> successMap) {
+                listener.onMembersAddedSuccess(successMap);
             }
 
             @Override
             public void onError(CometChatException e) {
-                conversationCallBack.onConversationDeleteError(e,position);
+
+                listener.onError(e);
+            }
+        });
+
+    }
+
+    public static void createGroup(Context context, String GUID, String name, String groupType, String password, String icon, String description, OnGroupCreateCallBackListener listener) {
+
+        Group group = new Group(GUID, name, groupType, password, icon, description);
+        CometChat.createGroup(group, new CometChat.CallbackListener<Group>() {
+            @Override
+            public void onSuccess(Group group) {
+                listener.onGroupCreateSuccess(group);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                listener.onError(e);
+            }
+        });
+
+    }
+
+    public static void deleteConversationWithUser(Context context, String uid, DeleteConversationCallBack conversationCallBack, int position) {
+        CometChat.deleteConversation(uid, CometChatConstants.RECEIVER_TYPE_USER, new CometChat.CallbackListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                conversationCallBack.onConversationDeleteSuccess(s, position);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                conversationCallBack.onConversationDeleteError(e, position);
+            }
+        });
+    }
+
+    public static void deleteConversationWithGroup(Context context, String uid, DeleteConversationCallBack conversationCallBack, int position) {
+        CometChat.deleteConversation(uid, CometChatConstants.RECEIVER_TYPE_GROUP, new CometChat.CallbackListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                conversationCallBack.onConversationDeleteSuccess(s, position);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                conversationCallBack.onConversationDeleteError(e, position);
             }
         });
     }
@@ -122,7 +182,6 @@ public class ApiCalls {
             }
         });
     }
-
 
     public static void updateUserDetails(User user, Context context, UserListeners listeners) {
         Log.e("see_object", "updateUserDetails: " + user.getStatusMessage() + "\n" + user.getUid());
@@ -286,12 +345,8 @@ public class ApiCalls {
             @Override
             public void onSuccess(User user) {
                 SharedPrefData.saveUserIdName(context, user.getUid(), user.getName());
-                if (SharedPrefData.getSaveContacts(context) != null && SharedPrefData.getCommonUser(context) != null) {
-                    context.startActivity(new Intent(context, MainActivity.class));
-                } else {
-                    context.startActivity(new Intent(context, ContactImportingAndProcessingActivity.class));
-                }
-                ((LoginActivity) context).finish();
+                context.startActivity(new Intent(context, MainActivity.class));
+                ((SplashScreen) context).finish();
             }
 
             @Override
@@ -307,22 +362,20 @@ public class ApiCalls {
         messagesRequest.fetchPrevious(new CometChat.CallbackListener<List<BaseMessage>>() {
             @Override
             public void onSuccess(List<BaseMessage> list) {
-//                listener.onSuccess(list);
                 messageListiners.onMessageReceivedSuccess(list, isScrolling);
 
             }
 
             @Override
             public void onError(CometChatException e) {
-//                listener.onError(e);
                 messageListiners.onMessageReceivedError(e);
             }
         });
     }
 
-    public static void fetchCometChatUsers(Context context, FetchUserCallBack fetchUserCallBack) {
+    public static void fetchCometChatUsers(Context context, UsersRequest usersRequest, FetchUserCallBack fetchUserCallBack) {
 
-        UsersRequest usersRequest = new UsersRequest.UsersRequestBuilder().setLimit(30).build();
+//        UsersRequest usersRequest = new UsersRequest.UsersRequestBuilder().setLimit(30).build();
 
         usersRequest.fetchNext(new CometChat.CallbackListener<List<User>>() {
             @Override
@@ -347,6 +400,7 @@ public class ApiCalls {
             public void onSuccess(HashMap<String, Integer> stringIntegerHashMap) {
 
                 conversation.setUnreadMessageCount(stringIntegerHashMap.get(conversation.getLastMessage().getSender().getUid()));
+
                 callBackUnreadMessageCount.unreadMessageCountSuccess(conversation);
 
             }
@@ -362,13 +416,35 @@ public class ApiCalls {
 
     }
 
+    public static void getUnreadMessageCountForGroup(Context context, Conversation conversation, CallBackUnreadMessageCount callBackUnreadMessageCount) {
+        Group group = (Group) conversation.getLastMessage().getReceiver();
+
+        CometChat.getUnreadMessageCountForGroup(group.getGuid(), new CometChat.CallbackListener<HashMap<String, Integer>>() {
+            @Override
+            public void onSuccess(HashMap<String, Integer> stringIntegerHashMap) {
+                Group group = (Group) conversation.getLastMessage().getReceiver();
+                int count = stringIntegerHashMap.get(group.getGuid());
+                conversation.setUnreadMessageCount(count);
+                callBackUnreadMessageCount.unreadMessageCountSuccess(conversation);
+
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                Log.d("check_the_count", "onSuccess: " + e.getMessage());
+                e.printStackTrace();
+                callBackUnreadMessageCount.unreadMessageCountError(e);
+            }
+
+        });
+
+    }
+
     public static void getConversations(Context context, ConversationsRequest conversationsRequest, ConversationsListener listener, boolean isScrolling) {
 
         conversationsRequest.fetchNext(new CometChat.CallbackListener<List<Conversation>>() {
             @Override
             public void onSuccess(List<Conversation> conversations) {
-//                conversationList.addAll(conversations);
-//                recyclerAdapter.notifyDataSetChanged();
 
                 listener.onGetConversationsSuccess(conversations, isScrolling);
 
@@ -376,16 +452,20 @@ public class ApiCalls {
 
             @Override
             public void onError(CometChatException e) {
-                // Hanlde failure
                 listener.onGetConversationsError(e);
             }
         });
 
     }
 
-    public static void sendTextMessage(Context context, int message_id, boolean isReplyMessage, String message, String receiverUid, CallBackMessageListener listener, String messageType) {
+    public static void sendTextMessage(Context context, int message_id, boolean isReplyMessage, String message, String receiverUid, CallBackMessageListener listener, String messageType, boolean isGroup) {
+        TextMessage textMessage;
+        if (isGroup) {
+            textMessage = new TextMessage(receiverUid, message, CometChatConstants.RECEIVER_TYPE_GROUP);
+        } else {
+            textMessage = new TextMessage(receiverUid, message, CometChatConstants.RECEIVER_TYPE_USER);
+        }
 
-        TextMessage textMessage = new TextMessage(receiverUid, message, CometChatConstants.RECEIVER_TYPE_USER);
         if (isReplyMessage)
             textMessage.setParentMessageId(message_id);
 
@@ -393,8 +473,6 @@ public class ApiCalls {
             @Override
             public void onSuccess(TextMessage textMessage) {
                 listener.onMessageSuccess(textMessage);
-
-
             }
 
             @Override
@@ -406,9 +484,15 @@ public class ApiCalls {
         });
     }
 
-    public static void sendMediaMessage(Context context, int message_id, boolean isReplyMessage, String message, String receiverUid, CallBackMessageListener listener, String messageType, String media_path) {
+    public static void sendMediaMessage(Context context, int message_id, boolean isReplyMessage, String message, String receiverUid, CallBackMessageListener listener, String messageType, String media_path, boolean isGroup) {
+        MediaMessage mediaMessage;
+        if (isGroup) {
+            mediaMessage = new MediaMessage(receiverUid, new File(media_path), CometChatConstants.MESSAGE_TYPE_IMAGE, CometChatConstants.RECEIVER_TYPE_GROUP);
 
-        MediaMessage mediaMessage = new MediaMessage(receiverUid, new File(media_path), CometChatConstants.MESSAGE_TYPE_IMAGE, CometChatConstants.RECEIVER_TYPE_USER);
+        } else {
+            mediaMessage = new MediaMessage(receiverUid, new File(media_path), CometChatConstants.MESSAGE_TYPE_IMAGE, CometChatConstants.RECEIVER_TYPE_USER);
+
+        }
 
         if (isReplyMessage)
             mediaMessage.setParentMessageId(message_id);
@@ -481,23 +565,144 @@ public class ApiCalls {
     }
 
     public static void getBlockedUsersByMe(Context context, FetchUserCallBack fetchUserCallBack, BlockedUsersRequest blockedUsersRequest) {
-
-
         blockedUsersRequest.fetchNext(new CometChat.CallbackListener<List<User>>() {
             @Override
             public void onSuccess(List<User> users) {
                 fetchUserCallBack.onSuccess(users);
-//                for(User user : users){
-////                    Log.e(TAG, user.getUid());
-//                }
+
             }
 
             @Override
             public void onError(CometChatException e) {
                 fetchUserCallBack.onError(e);
-//                Log.e(TAG, e.getMessage());
             }
         });
+    }
+
+    public static void getGroups(Context context, GroupsRequest groupsRequest, FetchGroupListCallBack fetchGroupListCallBack, boolean isScrolling) {
+
+
+        groupsRequest.fetchNext(new CometChat.CallbackListener<List<Group>>() {
+            @Override
+            public void onSuccess(List<Group> list) {
+                fetchGroupListCallBack.onGroupFetchSuccess(list, isScrolling);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                fetchGroupListCallBack.onError(e);
+            }
+        });
+
+    }
+
+    public static void getGroupDetails(Context context, String GUID, FetchGroupCallBack fetchGroupCallBack) {
+        CometChat.getGroup(GUID, new CometChat.CallbackListener<Group>() {
+            @Override
+            public void onSuccess(Group group) {
+                fetchGroupCallBack.onGroupFetchedSuccess(group);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                fetchGroupCallBack.onError(e);
+            }
+        });
+    }
+
+    public static void getGroupMembersList(Context context, GroupMembersRequest groupMembersRequest, FetchGroupMemberList fetchGroupMemberList) {
+
+        groupMembersRequest.fetchNext(new CometChat.CallbackListener<List<GroupMember>>() {
+            @Override
+            public void onSuccess(List<GroupMember> list) {
+                fetchGroupMemberList.onGroupMemberListSuccess(list);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                fetchGroupMemberList.onError(e);
+            }
+
+        });
+
+    }
+
+    public static void removeGroupMember(Context context, String member_uid, String GUID, SuccessMessageCallBack callBack) {
+        CometChat.kickGroupMember(member_uid, GUID, new CometChat.CallbackListener<String>() {
+            @Override
+            public void onSuccess(String successMessage) {
+                callBack.onActionSuccess(successMessage);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                callBack.onError(e);
+            }
+        });
+    }
+
+    public static void updateGroupInfo(Context context, String group_id, String name, String group_type, String password, FetchGroupCallBack fetchGroupCallBack) {
+
+        Group group = new Group(group_id, name, group_type, password);
+        CometChat.updateGroup(group, new CometChat.CallbackListener<Group>() {
+            @Override
+            public void onSuccess(Group group) {
+                fetchGroupCallBack.onGroupFetchedSuccess(group);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                fetchGroupCallBack.onError(e);
+
+            }
+        });
+
+    }
+
+    public static void leaveGroup(Context context, String GUID, SuccessMessageCallBack callBack) {
+
+        CometChat.leaveGroup(GUID, new CometChat.CallbackListener<String>() {
+            @Override
+            public void onSuccess(String successMessage) {
+                callBack.onActionSuccess(successMessage);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                callBack.onError(e);
+            }
+        });
+    }
+
+    public static void deleteGroup(Context context, String GUID, SuccessMessageCallBack successMessageCallBack) {
+        CometChat.deleteGroup(GUID, new CometChat.CallbackListener<String>() {
+            @Override
+            public void onSuccess(String successMessage) {
+                successMessageCallBack.onActionSuccess(successMessage);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                successMessageCallBack.onError(e);
+            }
+        });
+    }
+
+    public static void getMessageReadByUsers(Context context, int id, MessageReadByListCallBack callBack) {
+
+        CometChat.getMessageReceipts(id, new CometChat.CallbackListener<List<MessageReceipt>>() {
+            @Override
+            public void onSuccess(List<MessageReceipt> messageReceipts) {
+                callBack.onMessageReadBySuccess(messageReceipts);
+            }
+
+            @Override
+            public void onError(CometChatException e) {
+                // Handle error
+                callBack.onError(e);
+            }
+        });
+
     }
 
 }

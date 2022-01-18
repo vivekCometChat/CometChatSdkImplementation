@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
-    LinearLayout update_profile, see_online_users, block_users, logout, help_center;
+    LinearLayout update_profile, see_online_users, block_users, logout, help_center, see_Friends;
     CircleImageView profile_img;
     TextView name, status;
     User user;
@@ -29,7 +29,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         user = CometChat.getLoggedInUser();
         if (user != null) {
             initViews();
-//            setDataInToView();
         } else {
             startActivity(new Intent(this, LoginActivity.class));
             finishAffinity();
@@ -62,8 +61,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         name = findViewById(R.id.name);
         status = findViewById(R.id.status);
         logout = findViewById(R.id.logout);
+        see_Friends = findViewById(R.id.see_Friends);
 
         update_profile.setOnClickListener(this);
+        see_Friends.setOnClickListener(this);
         see_online_users.setOnClickListener(this);
         block_users.setOnClickListener(this);
         help_center.setOnClickListener(this);
@@ -86,6 +87,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.logout:
                 ApiCalls.logOutCurrentUser(ProfileActivity.this);
+                break;
+            case R.id.see_Friends:
+                startActivity(new Intent(ProfileActivity.this, FriendListActivity.class));
                 break;
         }
 

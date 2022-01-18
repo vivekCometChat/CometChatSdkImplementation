@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cometchat.pro.core.Call;
+import com.cometchat.pro.core.UsersRequest;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.User;
 import com.example.cometimplementation.Interfaces.FetchUserCallBack;
@@ -51,7 +52,6 @@ public class ContactsActivity extends AppCompatActivity implements Listeners, Fe
     }
 
     private void initViews() {
-        getSupportActionBar().setTitle("Contacts");
         contact_recycler = findViewById(R.id.contact_recycler);
         message = findViewById(R.id.message);
         message.setVisibility(View.GONE);
@@ -76,6 +76,7 @@ public class ContactsActivity extends AppCompatActivity implements Listeners, Fe
             message.setVisibility(View.VISIBLE);
             message.setText("No Contact Found");
         }
+        checkPermissions();
 
     }
 
@@ -111,13 +112,15 @@ public class ContactsActivity extends AppCompatActivity implements Listeners, Fe
 
         } else {
             getContacts();
+            setContactRecycler();
         }
 
     }
 
     public void getContacts() {
         Utilities.getContacts(this);
-        ApiCalls.fetchCometChatUsers(this, this);
+        UsersRequest usersRequest = new UsersRequest.UsersRequestBuilder().setLimit(30).build();
+        ApiCalls.fetchCometChatUsers(this, usersRequest,this);
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

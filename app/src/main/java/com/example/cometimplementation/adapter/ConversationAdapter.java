@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cometchat.pro.models.Conversation;
+import com.cometchat.pro.models.Group;
 import com.cometchat.pro.models.TextMessage;
 import com.cometchat.pro.models.User;
 import com.example.cometimplementation.R;
@@ -32,10 +33,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.myViewHolder> {
     List<Conversation> conversations;
     Context context;
+    boolean isGroup;
 
-    public ConversationAdapter(List<Conversation> conversations, Context context) {
+    public ConversationAdapter(List<Conversation> conversations, Context context, boolean isGroup) {
         this.conversations = conversations;
         this.context = context;
+        this.isGroup = isGroup;
     }
 
     @NonNull
@@ -50,25 +53,66 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
         Conversation conversation = conversations.get(position);
 
-        User receiverUser = (User) conversation.getLastMessage().getReceiver();
-        Log.d("check_the_count", "onBindViewHolder: " + receiverUser.toString());
         try {
+            if (conversation.getConversationType().equals("user")) {
+                User receiverUser = (User) conversation.getLastMessage().getReceiver();
+                if (!conversation.getLastMessage().getSender().getUid().equals(SharedPrefData.getUserId(context))) {
+                    holder.name.setText(conversation.getLastMessage().getSender().getName());
+                    if (!conversation.getLastMessage().getSender().getAvatar().isEmpty())
+                        Picasso.get().load(conversation.getLastMessage().getSender().getAvatar()).error(R.drawable.user_deafult).into(holder.user_image);
+                    else
+                        holder.user_image.setImageDrawable(context.getResources().getDrawable(R.drawable.user_deafult));
+                } else {
+                    holder.name.setText(receiverUser.getName());
+                    if (!receiverUser.getAvatar().isEmpty()) {
+                        Picasso.get().load(receiverUser.getAvatar()).error(R.drawable.user_deafult).into(holder.user_image);
+                    } else {
+                        holder.user_image.setImageDrawable(context.getResources().getDrawable(R.drawable.user_deafult));
+                    }
+                }
 
-            if (!conversation.getLastMessage().getSender().getUid().equals(SharedPrefData.getUserId(context))) {
-                holder.name.setText(conversation.getLastMessage().getSender().getName());
-                if (!conversation.getLastMessage().getSender().getAvatar().isEmpty())
-                    Picasso.get().load(conversation.getLastMessage().getSender().getAvatar()).error(R.drawable.user_deafult).into(holder.user_image);
+                holder.itemView.setOnClickListener(view -> {
+                    Intent i = new Intent(context, ChatActivity.class);
+                    if (!conversation.getLastMessage().getSender().getUid().equals(SharedPrefData.getUserId(context))) {
+                        i.putExtra("name", conversation.getLastMessage().getSender().getName());
+                        i.putExtra("uid", conversation.getLastMessage().getSender().getUid());
+                        i.putExtra("img_url", conversation.getLastMessage().getSender().getAvatar());
+                        i.putExtra("isGroup", false);
+                    } else {
+                        i.putExtra("name", receiverUser.getName());
+                        i.putExtra("uid", receiverUser.getUid());
+                        i.putExtra("img_url", receiverUser.getAvatar());
+                        i.putExtra("isGroup", false);
+
+                    }
+                    holder.itemView.getContext().startActivity(i);
+
+                });
+
+            } else if (conversation.getConversationType().equals("group")) {
+                Group group = (Group) conversation.getLastMessage().getReceiver();
+                holder.name.setText(group.getName());
+                if (!group.getIcon().isEmpty())
+                    Picasso.get().load(group.getIcon()).error(R.drawable.user_deafult).into(holder.user_image);
                 else
                     holder.user_image.setImageDrawable(context.getResources().getDrawable(R.drawable.user_deafult));
-            } else {
-                holder.name.setText(receiverUser.getName());
-                if (!receiverUser.getAvatar().isEmpty()) {
-                    Picasso.get().load(receiverUser.getAvatar()).error(R.drawable.user_deafult).into(holder.user_image);
-                } else {
-                    holder.user_image.setImageDrawable(context.getResources().getDrawable(R.drawable.user_deafult));
-                }
-            }
 
+                if (conversation.getUnreadMessageCount() > 0) {
+                    holder.unread_count.setVisibility(View.VISIBLE);
+                    holder.unread_count.setText(" " + conversation.getUnreadMessageCount() + " ");
+                } else {
+                    holder.unread_count.setVisibility(View.GONE);
+                }
+                holder.itemView.setOnClickListener(view -> {
+                    Intent i = new Intent(context, ChatActivity.class);
+                    i.putExtra("name", group.getName());
+                    i.putExtra("uid", group.getGuid());
+                    i.putExtra("img_url", group.getIcon());
+                    i.putExtra("isGroup", true);
+                    holder.itemView.getContext().startActivity(i);
+                });
+
+            }
             if (conversation.getUnreadMessageCount() > 0) {
                 holder.unread_count.setVisibility(View.VISIBLE);
                 holder.unread_count.setText(" " + conversation.getUnreadMessageCount() + " ");
@@ -104,25 +148,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 }
                 holder.call_status.setText(conversation.getLastMessage().getRawMessage().getJSONObject("data").getString("action"));
 
-
             }
             Log.d("check_type", "onBindViewHolder: " + conversation.getLastMessage().getType());
-            holder.itemView.setOnClickListener(view -> {
-                Intent i = new Intent(context, ChatActivity.class);
-                if (!conversation.getLastMessage().getSender().getUid().equals(SharedPrefData.getUserId(context))) {
-                    i.putExtra("name", conversation.getLastMessage().getSender().getName());
-                    i.putExtra("uid", conversation.getLastMessage().getSender().getUid());
-                    i.putExtra("img_url", conversation.getLastMessage().getSender().getAvatar());
-                } else {
-                    i.putExtra("name", receiverUser.getName());
-                    i.putExtra("uid", receiverUser.getUid());
-                    i.putExtra("img_url", receiverUser.getAvatar());
-                }
-                holder.itemView.getContext().startActivity(i);
 
-            });
-
-            holder.time.setText(Utilities.convertMillisToTime(conversation.getLastMessage().getDeliveredAt()));
+            holder.time.setText(Utilities.convertMillisToTime(conversation.getLastMessage().getSentAt()*1000));
 
         } catch (Exception e) {
             e.printStackTrace();

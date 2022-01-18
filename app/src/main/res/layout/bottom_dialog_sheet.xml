@@ -21,16 +21,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@color/white"
-        app:counterEnabled="true"
-        app:counterMaxLength="20">
+        >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/input_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:inputType="text"
-            android:maxLength="20" />
+            android:inputType="text" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

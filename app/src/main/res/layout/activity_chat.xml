@@ -11,6 +11,7 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        app:elevation="10dp"
         android:layout_alignParentTop="true">
 
         <androidx.appcompat.widget.Toolbar
@@ -36,39 +37,42 @@
                     android:src="@drawable/ic_arrow_back"
                     app:tint="@color/white" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/profile_img"
-                    android:layout_width="50dp"
+                    android:layout_width="40dp"
+                    android:background="@color/black"
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
+                    app:shapeAppearance="@style/roundedImageViewRounded"
                     android:src="@mipmap/ic_launcher" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:layout_gravity="center_vertical"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:text="name"
                         android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:textSize="20sp" />
+
                     <TextView
                         android:id="@+id/indicator"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:text="   Typing..."
-                        android:visibility="gone"
                         android:textColor="@color/white"
                         android:textSize="10sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <Space
@@ -77,19 +81,40 @@
                     android:layout_weight="1" />
 
                 <ImageView
-                    android:id="@+id/call"
+                    android:id="@+id/video_call"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/video"
+                    app:tint="@color/white" />
+
+                <ImageView
+                    android:id="@+id/audio_call"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_telephone"
+                    app:tint="@color/white" />
+
+                <ImageView
+                    android:id="@+id/message_info"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_baseline_call_24" />
+                    android:src="@drawable/ic_info"
+                    android:visibility="gone"
+                    app:tint="@color/white" />
+
                 <ImageView
                     android:id="@+id/more"
-                    android:layout_width="35dp"
+                    android:layout_width="25dp"
                     android:layout_height="35dp"
-                    android:onClick="moreOption"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="10dp"
+                    android:onClick="moreOption"
                     android:src="@drawable/ic_more_menu" />
 
 
@@ -99,26 +124,43 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_chat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/footer"
+        android:layout_below="@id/appbar"
+        android:layout_centerInParent="true"
+        android:background="#F9F9F9"
+        android:padding="10dp" />
+
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginBottom="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        android:orientation="horizontal"
-        android:padding="10dp"
-        android:weightSum="2">
+        <ImageView
+            android:id="@+id/attachments"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/attachment" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="5dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:background="@drawable/bordershape"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="7dp">
 
             <EditText
                 android:id="@+id/input_message"
@@ -134,7 +176,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="bottom"
-                android:src="@drawable/gallary_icon" />
+                android:src="@drawable/ic_baseline_mic"
+                app:tint="@color/dark_grey" />
 
         </LinearLayout>
 
@@ -144,33 +187,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:backgroundTint="@color/app_theme"
-            android:src="@drawable/send_img"
+            android:src="@drawable/send"
             android:text="send"
-            android:tint="@color/white"
-            android:translationZ="1dp" />
+            app:tint="@color/white"
+            app:maxImageSize="30dp" />
 
     </LinearLayout>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_chat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/image"
-        android:layout_below="@id/appbar"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="10dp"
-        android:background="#F9F9F9"
-        android:padding="10dp" />
-
-
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_above="@id/footer"
-        android:layout_marginStart="10dp"
-        android:src="@mipmap/ic_launcher"
-        android:translationZ="1dp"
-        android:visibility="gone" />
 </RelativeLayout>

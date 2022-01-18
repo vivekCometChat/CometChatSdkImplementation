@@ -1,17 +1,21 @@
 package com.example.cometimplementation.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cometchat.pro.constants.CometChatConstants;
 import com.cometchat.pro.core.CometChat;
 import com.cometchat.pro.exceptions.CometChatException;
 import com.cometchat.pro.models.User;
@@ -19,6 +23,7 @@ import com.example.cometimplementation.Interfaces.UserListeners;
 import com.example.cometimplementation.R;
 import com.example.cometimplementation.utilities.ApiCalls;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.squareup.picasso.Picasso;
 
@@ -26,30 +31,31 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UpdateProfileActivity extends AppCompatActivity implements UserListeners {
     User user;
-    CircleImageView profile_pic;
-    FloatingActionButton choose_image;
-    TextView user_name, about, Phone;
     String update_category = "";
-    LinearLayout edit_name, edit_status;
+    ShapeableImageView user_avatar;
+    TextView name, status_message;
+    ImageView status;
+    LinearLayout change_name, status_message_lay, edit_status_lay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
         initViews();
-        edit_name.setOnClickListener(view -> {
+        change_name.setOnClickListener(view -> {
             update_category = "name";
             showDialogBox("Enter your name");
         });
-        edit_status.setOnClickListener(view -> {
+        status_message_lay.setOnClickListener(view -> {
             update_category = "status";
             showDialogBox("Enter your Status");
         });
 
-        choose_image.setOnClickListener(view -> {
-            update_category="avatar";
-            showDialogBox("Enter Link for Avatar");
+        edit_status_lay.setOnClickListener(view -> {
+            update_category = "status";
+            showDialogBox("Enter Online status");
         });
+
 
     }
 
@@ -71,17 +77,22 @@ public class UpdateProfileActivity extends AppCompatActivity implements UserList
 
         save.setOnClickListener(view -> {
             if (update_category.equals("name") && !update_category.isEmpty()) {
-                User usr=new User();
+                User usr = new User();
                 usr.setName(input.getEditText().getText().toString().trim());
-                ApiCalls.updateUserDetails(usr,this,this);
+                ApiCalls.updateUserDetails(usr, this, this);
             } else if (update_category.equals("status") && !update_category.isEmpty()) {
-                User usr=new User();
+                User usr = new User();
                 usr.setStatusMessage(input.getEditText().getText().toString().trim());
-                ApiCalls.updateUserDetails(usr,this,this);
-            }else if(update_category.equals("avatar") && !update_category.isEmpty()){
-                User usr=new User();
+                ApiCalls.updateUserDetails(usr, this, this);
+            } else if (update_category.equals("avatar") && !update_category.isEmpty()) {
+                User usr = new User();
                 usr.setAvatar(input.getEditText().getText().toString().trim());
-                ApiCalls.updateUserDetails(usr,this,this);
+                ApiCalls.updateUserDetails(usr, this, this);
+            } else if (update_category.equals("status") && !update_category.isEmpty()) {
+                User usr = new User();
+                usr.setStatus(input.getEditText().getText().toString().trim());
+                ApiCalls.updateUserDetails(usr, this, this);
+
             }
             dialog.dismiss();
         });
@@ -100,38 +111,47 @@ public class UpdateProfileActivity extends AppCompatActivity implements UserList
     }
 
     private void setData(User usr) {
-        Picasso.get().load(usr.getAvatar()).into(profile_pic);
-        user_name.setText(usr.getName());
-        about.setText(usr.getStatusMessage() == null ? "Hey There I am using CometChat" : usr.getStatusMessage());
-        Phone.setText("+91 " + usr.getUid());
+
+        Picasso.get().load(usr.getAvatar()).into(user_avatar);
+        name.setText(usr.getName());
+        if (user.getStatus().equals(CometChatConstants.USER_STATUS_ONLINE))
+            status.setColorFilter(ContextCompat.getColor(this, R.color.online_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+        else
+            status.setColorFilter(ContextCompat.getColor(this, R.color.red), android.graphics.PorterDuff.Mode.MULTIPLY);
+
+        status_message.setText(user.getStatus());
 
     }
 
     private void initViews() {
         user = CometChat.getLoggedInUser();
-        edit_status = findViewById(R.id.edit_status);
-        edit_name = findViewById(R.id.edit_name);
+        user_avatar = findViewById(R.id.user_avatar);
+        name = findViewById(R.id.name);
+        change_name = findViewById(R.id.change_name);
+        status_message_lay = findViewById(R.id.status_message_lay);
+        edit_status_lay = findViewById(R.id.edit_status_lay);
+        status = findViewById(R.id.status);
+        status_message = findViewById(R.id.status_message);
 
-        profile_pic = findViewById(R.id.profile_pic);
-        user_name = findViewById(R.id.user_name);
-        choose_image = findViewById(R.id.choose_image);
-        about = findViewById(R.id.about);
-        Phone = findViewById(R.id.Phone);
-        getSupportActionBar().setTitle("Profile");
+
     }
 
 
     @Override
     public void onSuccess(User user) {
-        Log.d("see_object", "onSuccess: "+user.toString());
+        Log.d("see_object", "onSuccess: " + user.toString());
         setData(user);
     }
 
     @Override
     public void onError(CometChatException e) {
-        Log.d("see_object", "onError: "+e.getMessage());
-        Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
+        Log.d("see_object", "onError: " + e.getMessage());
+        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         e.printStackTrace();
 
+    }
+
+    public void back(View view) {
+        onBackPressed();
     }
 }

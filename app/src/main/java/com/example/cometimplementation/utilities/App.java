@@ -2,6 +2,8 @@ package com.example.cometimplementation.utilities;
 
 import android.app.Application;
 import android.content.Intent;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.cometchat.pro.core.Call;
 import com.cometchat.pro.core.CometChat;
@@ -19,13 +21,15 @@ public class App extends Application implements Listeners, CallStatus {
     public void onCreate() {
         super.onCreate();
         ApiCalls.cometChatInitialize(this);
+
         ApiCalls.callInformation(this, this);
+
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        CometChat.removeMessageListener(listenerId);
+//        CometChat.removeMessageListener(listenerId);
         CometChat.removeCallListener(listenerId);
     }
 

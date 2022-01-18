@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/chat"
         android:icon="@drawable/ic_chat"
-        android:title="Chat" />
+        android:title="Recent" />
 
     <item
         android:id="@+id/users"
         android:icon="@drawable/ic_person"
-        android:title="Users" />
+        android:title="Contacts" />
 
     <item
         android:id="@+id/group"
         android:icon="@drawable/ic_group"
-        android:title="Group" />
+        android:title="Groups" />
 
-    <item
-        android:id="@+id/calls"
-        android:icon="@drawable/ic_baseline_call_24"
-        android:title="Call" />
+
 
 
 

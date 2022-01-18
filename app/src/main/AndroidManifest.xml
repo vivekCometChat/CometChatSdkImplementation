@@ -25,19 +25,38 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppThemeNoActionBar">
+        <activity
+            android:name=".activities.MoreOptionActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.UserDatailScreen"
+            android:exported="true" />
+        <activity
+            android:name=".activities.SplashScreen"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.FriendListActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.MessageInfoActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.AddMemberActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.CreateGroupActivity"
+            android:exported="true" />
         <activity
             android:name=".activities.UserDetailActivity"
-            android:theme="@style/AppTheme2"
-            android:exported="true" >
-
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-
-        </activity>
+            android:exported="true"
+            android:theme="@style/AppTheme2" />
         <activity
             android:name=".activities.BlockedUserActivity"
             android:exported="true" />
@@ -57,6 +76,7 @@
         <activity
             android:name=".activities.ContactsActivity"
             android:exported="true"
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CallReciverActivity"
@@ -66,11 +86,7 @@
             android:name=".activities.LoginActivity"
             android:exported="true"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activities.CallingActivity"
@@ -79,8 +95,7 @@
         <activity
             android:name=".activities.ChatActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />

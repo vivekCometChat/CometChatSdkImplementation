@@ -1,6 +1,8 @@
 package com.example.cometimplementation.models;
 
-public class UserPojo {
+import java.io.Serializable;
+
+public class UserPojo implements Serializable {
     private String name;
     private String number;
     private String img_url;

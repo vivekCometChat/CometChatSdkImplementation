@@ -10,8 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cometchat.pro.constants.CometChatConstants;
+import com.cometchat.pro.models.User;
 import com.example.cometimplementation.R;
 import com.example.cometimplementation.activities.ChatActivity;
 import com.example.cometimplementation.models.UserPojo;
@@ -23,9 +26,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.myViewHolder> {
     Context context;
-    List<UserPojo> userPojoList;
+    List<User> userPojoList;
 
-    public RecyclerAdapter(Context context, List<UserPojo> userPojoList) {
+    public RecyclerAdapter(Context context, List<User> userPojoList) {
         this.context = context;
         this.userPojoList = userPojoList;
     }
@@ -41,15 +44,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.myView
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
 
+        holder.status.setVisibility(View.VISIBLE);
         holder.name.setText(userPojoList.get(position).getName());
-        holder.number.setText(userPojoList.get(position).getNumber());
-        Log.d("see_image", "onBindViewHolder: " + userPojoList.get(position).getImg_url());
-        Picasso.get().load(userPojoList.get(position).getImg_url()).error(R.drawable.ic_launcher_background).into(holder.circular_img);
+        holder.number.setText(userPojoList.get(position).getStatus());
+        Log.e("check_status", "onBindViewHolder: "+ userPojoList.get(position).getStatus());
+        Picasso.get().load(userPojoList.get(position).getAvatar()).error(R.drawable.ic_launcher_background).into(holder.circular_img);
+
+        if (userPojoList.get(position).getStatus().equals(CometChatConstants.USER_STATUS_ONLINE)) {
+            holder.status.setColorFilter(ContextCompat.getColor(context, R.color.online_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+        } else if (userPojoList.get(position).getStatus().equals(CometChatConstants.USER_STATUS_OFFLINE)) {
+            holder.status.setColorFilter(ContextCompat.getColor(context, R.color.red), android.graphics.PorterDuff.Mode.MULTIPLY);
+        }
+
         holder.chat.setOnClickListener(v -> {
             Intent i = new Intent(context, ChatActivity.class);
             i.putExtra("name", userPojoList.get(position).getName());
-            i.putExtra("uid", userPojoList.get(position).getNumber());
-            i.putExtra("img_url", userPojoList.get(position).getImg_url());
+            i.putExtra("uid", userPojoList.get(position).getUid());
+            i.putExtra("img_url", userPojoList.get(position).getAvatar());
+            i.putExtra("isGroup", false);
             holder.itemView.getContext().startActivity(i);
         });
 
@@ -64,7 +76,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.myView
 
         TextView name, number;
         CircleImageView circular_img;
-        ImageView chat;
+        ImageView chat, status;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,6 +84,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.myView
             number = itemView.findViewById(R.id.number);
             circular_img = itemView.findViewById(R.id.circular_img);
             chat = itemView.findViewById(R.id.chat);
+            status = itemView.findViewById(R.id.status);
 
         }
     }
