@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-    compileSdk 30
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.cometimplementation"
         minSdk 24
-        targetSdk 30
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -25,13 +25,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    compileSdkVersion 30
-    buildToolsVersion '30.0.2'
+    compileSdkVersion 33
 }
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
@@ -46,6 +45,6 @@ dependencies {
     implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     implementation 'com.google.code.gson:gson:2.8.7'
-    implementation 'com.cometchat:pro-android-chat-sdk:2.4.1'
-    implementation 'com.cometchat:pro-android-calls-sdk:2.1.2-beta2'
+    implementation 'com.cometchat:pro-android-chat-sdk:3.0.15'
+    implementation 'com.cometchat:pro-android-calls-sdk:3.0.0'
 }

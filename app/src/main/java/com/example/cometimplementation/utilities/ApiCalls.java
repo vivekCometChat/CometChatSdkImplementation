@@ -315,6 +315,26 @@ public class ApiCalls {
                 listener.onAudioModesUpdated(list);
             }
 
+            @Override
+            public void onRecordingStarted(User user) {
+
+            }
+
+            @Override
+            public void onRecordingStopped(User user) {
+
+            }
+
+            @Override
+            public void onUserMuted(User user, User user1) {
+
+            }
+
+            @Override
+            public void onCallSwitchedToVideo(String s, User user, User user1) {
+
+            }
+
         });
 
 

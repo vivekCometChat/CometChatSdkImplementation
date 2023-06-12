@@ -307,7 +307,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.linear_lay:
 //                Intent i = new Intent(this, UserDetailActivity.class);
-                Intent i = new Intent(this, UserDatailScreen.class);
+                Intent i = new Intent(this, UserDetailActivity.class);
                 i.putExtra("uid", receiverUid);
                 i.putExtra("isGroup", isGroup);
                 startActivity(i);

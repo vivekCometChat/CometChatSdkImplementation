@@ -22,7 +22,6 @@ import com.example.cometimplementation.utilities.SharedPrefData;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.measite.minidns.record.A;
 
 public class OnlineUsersActivity extends AppCompatActivity implements UserListeners, FetchUserCallBack {
 

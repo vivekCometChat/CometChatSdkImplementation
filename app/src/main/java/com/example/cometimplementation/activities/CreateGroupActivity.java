@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import de.measite.minidns.record.A;
 
 public class CreateGroupActivity extends AppCompatActivity implements View.OnClickListener, OnGroupCreateCallBackListener, OnMembersAddedCallBack {
 

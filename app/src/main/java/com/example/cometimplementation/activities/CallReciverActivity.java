@@ -229,6 +229,26 @@ public class CallReciverActivity extends AppCompatActivity implements CallStatus
 
     }
 
+    @Override
+    public void onRecordingStarted(User user) {
+
+    }
+
+    @Override
+    public void onRecordingStopped(User user) {
+
+    }
+
+    @Override
+    public void onUserMuted(User user, User user1) {
+
+    }
+
+    @Override
+    public void onCallSwitchedToVideo(String s, User user, User user1) {
+
+    }
+
 
     public void chat(View view) {
         Toast.makeText(this, "yet to implement!", Toast.LENGTH_SHORT).show();

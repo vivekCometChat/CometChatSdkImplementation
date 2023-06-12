@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import de.measite.minidns.record.A;
 
 public class AddMemberActivity extends AppCompatActivity implements OnMembersAddedCallBack {
     List<String> added_users = new ArrayList<>();

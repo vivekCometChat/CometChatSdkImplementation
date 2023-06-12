@@ -21,7 +21,6 @@ import com.example.cometimplementation.utilities.ApiCalls;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.measite.minidns.record.A;
 
 public class FriendListActivity extends AppCompatActivity implements FetchUserCallBack, UserListeners {
     private RecyclerView recyclerView;

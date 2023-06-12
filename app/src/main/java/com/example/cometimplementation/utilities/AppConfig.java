@@ -6,9 +6,9 @@ public class AppConfig {
 
     public class AppDetails {
 
-        public static final String APP_ID = "201399a38abcb1e8";
+        public static final String APP_ID = "212570a35d379d83";
 
-        public static final String AUTH_KEY = "04e9a3868f5c386a9d2c4e648ee373817ba46102";
+        public static final String AUTH_KEY = "ae4f31ade06483aca823746af9182830db5f7a8f";
 
         public static final String REGION = "us";
     }

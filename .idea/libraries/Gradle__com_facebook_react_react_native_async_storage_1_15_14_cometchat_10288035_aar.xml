@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.facebook.react:react-native-async-storage:1.15.14-cometchat-10288035@aar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-3/5d8a2dece3f4ef7e88634906454d38b0/transformed/jetified-react-native-async-storage-1.15.14-cometchat-10288035/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/5d8a2dece3f4ef7e88634906454d38b0/transformed/jetified-react-native-async-storage-1.15.14-cometchat-10288035/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.facebook.react/react-native-async-storage/1.15.14-cometchat-10288035/575dc0e7624918bc5c29de6525c1fdd29e4603a4/react-native-async-storage-1.15.14-cometchat-10288035-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

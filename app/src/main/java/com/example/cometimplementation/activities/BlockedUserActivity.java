@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import de.measite.minidns.record.A;
 
 public class BlockedUserActivity extends AppCompatActivity implements FetchUserCallBack, BlockUnBlockUserCallBackListener {
     RecyclerView blocked_users;
