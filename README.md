@@ -17,9 +17,9 @@ This is a reference application showcasing the integration of [**CometChat's And
     ```
 2. In Android Studio, open the project cometchat-sample-app-android-java
 
-3. Enter your CometChat _`App ID`_, _`Region`_, and _`Auth Key`_ in the [AppConstants.java](app/src/main/java/com/cometchat/javasampleapp/AppConstants.java) (https://github.com/cometchat/cometchat-sample-app-android-java/blob/v4/app/src/main/java/com/cometchat/javasampleapp/AppConstants.java) file:https://github.com/cometchat/cometchat-sample-app-android-java/blob/1a404a36789639fa6198dc69452718f246cd082c/app/src/main/java/com/cometchat/javasampleapp/AppConstants.java#L3-L11
+3. Enter your CometChat _`App ID`_, _`Region`_, and _`Auth Key`_ in the [AppConstants.java](app/src/main/java/com/cometchat/javasampleapp/AppConstants.java) (https://github.com/cometchat/cometchat-sample-app-android-java/blob/v4/app/src/main/java/com/cometchat/javasampleapp/AppConstants.java) file: https://github.com/cometchat/cometchat-sample-app-android-java/blob/1a404a36789639fa6198dc69452718f246cd082c/app/src/main/java/com/cometchat/javasampleapp/AppConstants.java#L3-L11
 
-4. Run the app on a device or emulator.
+7. Run the app on a device or emulator.
 
 <div style="
     display: flex;
