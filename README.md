@@ -21,7 +21,7 @@ This is a reference application showcasing the integration of [**CometChat's And
    https://github.com/cometchat/cometchat-sample-app-android-java/blob/1a404a36789639fa6198dc69452718f246cd082c/app/src/main/java/com/cometchat/javasampleapp/AppConstants.java#L3-L11
 
 5. Enter your CometChat _`App ID`_, _`Region`_, and _`Auth Key`_ in the [AppConstants.ts](https://github.com/cometchat/cometchat-sample-app-react-native/blob/v4/AppConstants.ts) file:
-   https://github.com/cometchat/cometchat-sample-app-react-native/blob/f7d4945414da14405f5dece975c8cf43926b01c7/AppConstants.ts#L1-L5
+   https://github.com/vivekCometChat/CometChatSdkImplementation/blob/76a8779a9fc6e38b53c7a4cd8a3e3afd14ee9612/app/src/main/java/com/example/cometimplementation/activities/AddMemberActivity.java#L13-L20
    
 7. Run the app on a device or emulator.
 
