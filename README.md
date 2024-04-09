@@ -20,10 +20,7 @@ This is a reference application showcasing the integration of [**CometChat's And
 3. Enter your CometChat _`App ID`_, _`Region`_, and _`Auth Key`_ in the [AppConstants.java](https://github.com/cometchat/cometchat-sample-app-android-java/blob/v4/app/src/main/java/com/cometchat/javasampleapp/AppConstants.java) file:
    https://github.com/cometchat/cometchat-sample-app-android-java/blob/1a404a36789639fa6198dc69452718f246cd082c/app/src/main/java/com/cometchat/javasampleapp/AppConstants.java#L3-L11
 
-5. Enter your CometChat _`App ID`_, _`Region`_, and _`Auth Key`_ in the [AppConstants.ts](https://github.com/cometchat/cometchat-sample-app-react-native/blob/v4/AppConstants.ts) file:
-   https://github.com/vivekCometChat/CometChatSdkImplementation/blob/76a8779a9fc6e38b53c7a4cd8a3e3afd14ee9612/app/src/main/java/com/example/cometimplementation/activities/AddMemberActivity.java#L13-L20
-   
-7. Run the app on a device or emulator.
+4. Run the app on a device or emulator.
 
 <div style="
     display: flex;
